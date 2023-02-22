@@ -31,7 +31,7 @@ app.get('/rank/:name', (req, res) => {
         }
         if (body.players[0].leaderboards.rm_solo) {
             answer = answer + '\n' + '[Solo] - ' +
-                body.players[0].leaderboards.rm_solo.rank_level + ' - '
+                body.players[0].leaderboards.rm_solo.rank_level + ' - ' +
                 body.players[0].leaderboards.rm_solo.rating + ' <-> '
         } else {
             answer = answer + '\n' + '[Solo] - Unranked <-> '
