@@ -22,7 +22,26 @@ app.get('/rank/:name', (req, res) => {
         if (error) {
             return res.send("Error Message");
         }
-        res.send(response);
+
+        let answer = 'Player: ' + player_name
+        if (response.players.length === 0) {
+            res.send('No player with the name - ' + player_name + ' - was found.')
+        }
+        if (response.players[0].leaderboards.rm_solo) {
+            answer = answer + '\n' + '[Solo] - ' +
+                response.players[0].leaderboards.rm_solo.rank_level + ' - '
+                response.players[0].leaderboards.rm_solo.rating
+        } else {
+            answer = answer + '\n' + '[Solo] - Unranked'
+        }
+        if (response.players[0].leaderboards.rm_team) {
+            answer = answer + '\n' + '[Team] - ' +
+                response.players[0].leaderboards.rm_team.rank_level + ' - ' +
+                response.players[0].leaderboards.rm_team.rating
+        } else {
+            answer = answer + '\n' + '[Team] - Unranked'
+        }
+        res.send(answer)
     })
 })
 
