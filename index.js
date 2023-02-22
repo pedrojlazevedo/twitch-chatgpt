@@ -24,7 +24,7 @@ app.get('/rank/:name', (req, res) => {
             return res.send("Something went wrong! HEEEEELP");
         }
 
-        let answer = 'Player: ' + body.players[0].name + " | "
+        let answer = 'Player: ' + body.players[0].name + " <-> "
 
         if (body.players.length === 0) {
             res.send('No player with the name - ' + player_name + ' - was found.')
@@ -32,9 +32,9 @@ app.get('/rank/:name', (req, res) => {
         if (body.players[0].leaderboards.rm_solo) {
             answer = answer + '\n' + '[Solo] - ' +
                 body.players[0].leaderboards.rm_solo.rank_level + ' - '
-                body.players[0].leaderboards.rm_solo.rating + ' | '
+                body.players[0].leaderboards.rm_solo.rating + ' <-> '
         } else {
-            answer = answer + '\n' + '[Solo] - Unranked | '
+            answer = answer + '\n' + '[Solo] - Unranked <-> '
         }
         if (body.players[0].leaderboards.rm_team) {
             answer = answer + '\n' + '[Team] - ' +
