@@ -19,25 +19,26 @@ app.get('/rank/:name', (req, res) => {
         url: "https://aoe4world.com/api/v0/players/search?query=" + player_name ,
         json: true
     }, (error, response) => {
+        let body = response.body
         if (error) {
             return res.send("Error Message");
         }
 
         let answer = 'Player: ' + player_name
-        if (response.players.length === 0) {
+        if (body.players.length === 0) {
             res.send('No player with the name - ' + player_name + ' - was found.')
         }
-        if (response.players[0].leaderboards.rm_solo) {
+        if (body.players[0].leaderboards.rm_solo) {
             answer = answer + '\n' + '[Solo] - ' +
-                response.players[0].leaderboards.rm_solo.rank_level + ' - '
-                response.players[0].leaderboards.rm_solo.rating
+                body.players[0].leaderboards.rm_solo.rank_level + ' - '
+                body.players[0].leaderboards.rm_solo.rating
         } else {
             answer = answer + '\n' + '[Solo] - Unranked'
         }
-        if (response.players[0].leaderboards.rm_team) {
+        if (body.players[0].leaderboards.rm_team) {
             answer = answer + '\n' + '[Team] - ' +
-                response.players[0].leaderboards.rm_team.rank_level + ' - ' +
-                response.players[0].leaderboards.rm_team.rating
+                body.players[0].leaderboards.rm_team.rank_level + ' - ' +
+                body.players[0].leaderboards.rm_team.rating
         } else {
             answer = answer + '\n' + '[Team] - Unranked'
         }
