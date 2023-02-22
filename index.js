@@ -14,7 +14,7 @@ app.all('/rank', (req, res) => {
 
 app.get('/rank/:name', (req, res) => {
     const player_name = req.params.name
-    const res = $(urlfetch json "https://aoe4world.com/api/v0/players/search?query=$(querystring)");
+
     request.get({
         url: "https://aoe4world.com/api/v0/players/search?query=" + player_name ,
         json: true
@@ -24,8 +24,6 @@ app.get('/rank/:name', (req, res) => {
         }
         res.send(response);
     })
-    
-
 })
 
 app.listen(process.env.PORT || 3000)
