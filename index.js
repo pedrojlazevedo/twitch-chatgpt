@@ -2,6 +2,8 @@ const express = require('express')
 const request = require('request')
 const app = express()
 
+const mjerticla_id = 6600634
+
 app.all('/', (req, res) => {
     console.log("Just got a request!")
     res.send('Yo!')
@@ -44,6 +46,36 @@ app.get('/rank/:name', (req, res) => {
             answer = answer + '\n' + '[Team] - Unranked'
         }
         res.send(answer)
+    })
+})
+
+app.all('/match', (req, res) => {
+    request.get({
+        url: "https://aoe4world.com/api/v0/players/" + mjerticla_id + "/games",
+        json: true
+    }, (error, response) => {
+        let body = response.body
+        if (error) {
+            return res.send("Something went wrong! HEEEEELP");
+        }
+        let last_game = body.games[0]  // get last game
+        if (last_game.ongoing) {
+            const answer = ""
+            answer = answer + "[" + body.server + "]"
+            answer = answer + "[MAP] - " + body.map
+            teams = body.teams
+            for (let i = 0; i < teams.length; i++) {
+                answer = answer + " <-> ["
+                for (let j = 0; j < team[i].length; j++) {
+                    let player = team[i][j]
+                    answer = answer + " " + player.name + "(" + player.rating + ")"
+                }
+                answer = answer + "]"
+            }
+            res.send(answer)
+        } else {
+            res.send("Your favorite streamer is not currently playing")
+        }
     })
 })
 
