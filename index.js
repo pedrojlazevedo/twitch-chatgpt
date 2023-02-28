@@ -104,24 +104,26 @@ app.all('/match', (req, res) => {
     })
 })
 
-app.all('/match/:name', (req, res) => {
+app.get('/match/:name', (req, res) => {
     const player_name = req.params.name
-    
+    let player_id = 0
     // get user id
-     request.get({
+    request.get({
         url: "https://aoe4world.com/api/v0/players/search?query=" + player_name ,
         json: true
-     }, (error, response) => {
+    }, (error, response) => {
         let body = response.body
         if (error) {
             return res.send("Não encontrei o nome desse jogador");
         }
-
-        let answer = 'Player: ' + body.players[0].name + " <-> "
-        })
-
+        player_id = body.players[0].profile_id
+    })
+    
+    if (player_id === 0) {
+        res.send("Não encontrei o nome desse jogador.")
+    }
     request.get({
-        url: "https://aoe4world.com/api/v0/players/" + String(mjerticla_id) + "/games",
+        url: "https://aoe4world.com/api/v0/players/" + String(player_id) + "/games",
         json: true
     }, (error, response) => {
         let body = response.body
@@ -156,7 +158,7 @@ app.all('/match/:name', (req, res) => {
             }
             res.send(answer)
         } else {
-            res.send("O teu streamer favorito não está a jogar nenhum jogo :(")
+            res.send("Esse jogador não está a jogar nenhum jogo... :(")
         }
     })
 })
