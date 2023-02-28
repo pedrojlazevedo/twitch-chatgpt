@@ -60,7 +60,7 @@ app.all('/match', (req, res) => {
         }
         let last_game = body.games[0]  // get last game
         if (last_game.ongoing) {
-            const answer = ""
+            let answer = ""
             answer = answer + "[" + body.server + "]"
             answer = answer + "[MAP] - " + body.map
             teams = body.teams
