@@ -63,9 +63,9 @@ app.all('/match', (req, res) => {
         console.log(last_game)
         console.log(last_game.ongoing)
         if (last_game.ongoing) {
-            let answer = ""
-            answer = answer + "[" + body.server + "]"
-            answer = answer + "[MAP] - " + body.map
+            let answer = "["
+            answer = answer + body.server + "]"
+            answer = answer + " <-> " + body.map
             teams = last_game.teams
             for (let i = 0; i < teams.length; i++) {
                 answer = answer + " <-> ["
