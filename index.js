@@ -59,12 +59,10 @@ app.all('/match', (req, res) => {
             return res.send("Something went wrong! HEEEEELP");
         }
         let last_game = body.games[0]  // get last game
-        console.log(body)
-        console.log(last_game)
-        console.log(last_game.ongoing)
         if (last_game.ongoing) {
             let answer = "["
             answer = answer + body.server + "]"
+            console.log(body.map)
             answer = answer + " <-> " + body.map
             teams = last_game.teams
             for (let i = 0; i < teams.length; i++) {
@@ -72,6 +70,8 @@ app.all('/match', (req, res) => {
                 for (let j = 0; j < teams[i].length; j++) {
                     let player = teams[i][j]
                     answer = answer + " " + player.name + "(" + player.rating + ")"
+                    console.log(player)
+                    console.log(player.name)
                 }
                 answer = answer + "]"
             }
