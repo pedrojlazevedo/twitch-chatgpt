@@ -99,7 +99,7 @@ app.all('/match', (req, res) => {
             }
             res.send(answer)
         } else {
-            res.send("Your favorite streamer is not currently playing")
+            res.send("O teu streamer favorito não está a jogar nenhum jogo :(")
         }
     })
 })
