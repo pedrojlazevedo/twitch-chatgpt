@@ -113,6 +113,7 @@ app.get('/match/:name', (req, res) => {
         url: "https://aoe4world.com/api/v0/players/search?query=" + player_name ,
         json: true
     }, (error, response) => {
+        console.log(response)
         let body = response.body
         if (error) {
             return res.send("Não encontrei o nome desse jogador");
