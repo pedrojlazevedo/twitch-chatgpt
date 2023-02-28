@@ -65,7 +65,11 @@ app.all('/match', (req, res) => {
             answer = answer + " <-> " + last_game.map
             const teams = last_game.teams
             for (let i = 0; i < teams.length; i++) {
-                answer = answer + " <-> ["
+                if (i > 0) {
+                    answer = answer + " VS ["
+                } else {
+                    answer = answer + " <-> ["
+                }
                 for (let j = 0; j < teams[i].length; j++) {
                     const player = teams[i][j].player
                     answer = answer + " " + player.name 
