@@ -106,6 +106,7 @@ app.all('/match', (req, res) => {
 
 app.get('/match/:name', (req, res) => {
     const player_name = req.params.name
+    console.log(player_name)
     let player_id = 0
     // get user id
     request.get({
@@ -116,9 +117,11 @@ app.get('/match/:name', (req, res) => {
         if (error) {
             return res.send("Não encontrei o nome desse jogador");
         }
+        console.log("--body--")
         console.log(body.players[0])
         player_id = body.players[0].profile_id
     })
+    console.log(player_id === 0)
     console.log(player_id)
     if (player_id === 0) {
         res.send("Não encontrei o nome desse jogador.")
