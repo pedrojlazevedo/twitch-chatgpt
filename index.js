@@ -59,6 +59,9 @@ app.all('/match', (req, res) => {
             return res.send("Something went wrong! HEEEEELP");
         }
         let last_game = body.games[0]  // get last game
+        console.log(body)
+        console.log(last_game)
+        console.log(last_game.ongoing)
         if (last_game.ongoing) {
             let answer = ""
             answer = answer + "[" + body.server + "]"
