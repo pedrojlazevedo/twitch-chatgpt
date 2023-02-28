@@ -108,9 +108,10 @@ app.get('/match/:name', (req, res) => {
     const player_name = req.params.name
     console.log(player_name)
     let player_id = 0
+
     // get user id
     request.get({
-        url: "https://aoe4world.com/api/v0/players/search?query=" + player_name ,
+        url: "https://aoe4world.com/api/v0/players/search?query=" + player_name,
         json: true
     }, (error, response) => {
         console.log(response)
@@ -121,50 +122,51 @@ app.get('/match/:name', (req, res) => {
         console.log("--body--")
         console.log(body.players[0])
         player_id = body.players[0].profile_id
-    })
-    console.log(player_id === 0)
-    console.log(player_id)
-    if (player_id === 0) {
-        res.send("Não encontrei o nome desse jogador.")
-    }
-    request.get({
-        url: "https://aoe4world.com/api/v0/players/" + String(player_id) + "/games",
-        json: true
-    }, (error, response) => {
-        let body = response.body
-        if (error) {
-            return res.send("Something went wrong! HEEEEELP");
+
+            console.log(player_id === 0)
+        console.log(player_id)
+        if (player_id === 0) {
+            res.send("Não encontrei o nome desse jogador.")
         }
-        let last_game = body.games[0]  // get last game
-        if (last_game.ongoing) {
-            let answer = "["
-            answer = answer + last_game.server + "]"
-            answer = answer + " <-> " + last_game.map
-            const teams = last_game.teams
-            for (let i = 0; i < teams.length; i++) {
-                if (i == 0) {
-                    answer = answer + " <-> ["
-                } else {
-                    answer = answer + " VS ["
-                }
-                for (let j = 0; j < teams[i].length; j++) {
-                    const player = teams[i][j].player
-                    const player_civ_name = answer + "(" + civ_mapping[player.civilization] + ")" + player.name 
-                    if (j == 0) {
-                        answer = answer + player_civ_name
-                    } else {
-                        answer = answer + " + " + player_civ_name
-                    }
-                    if (player.rating) {
-                        answer = answer + "(" + player.rating + ")"
-                    }
-                }
-                answer = answer + "]"
+        request.get({
+            url: "https://aoe4world.com/api/v0/players/" + String(player_id) + "/games",
+            json: true
+        }, (error, response) => {
+            let body = response.body
+            if (error) {
+                return res.send("Something went wrong! HEEEEELP");
             }
-            res.send(answer)
-        } else {
-            res.send("Esse jogador não está a jogar nenhum jogo... :(")
-        }
+            let last_game = body.games[0]  // get last game
+            if (last_game.ongoing) {
+                let answer = "["
+                answer = answer + last_game.server + "]"
+                answer = answer + " <-> " + last_game.map
+                const teams = last_game.teams
+                for (let i = 0; i < teams.length; i++) {
+                    if (i == 0) {
+                        answer = answer + " <-> ["
+                    } else {
+                        answer = answer + " VS ["
+                    }
+                    for (let j = 0; j < teams[i].length; j++) {
+                        const player = teams[i][j].player
+                        const player_civ_name = answer + "(" + civ_mapping[player.civilization] + ")" + player.name
+                        if (j == 0) {
+                            answer = answer + player_civ_name
+                        } else {
+                            answer = answer + " + " + player_civ_name
+                        }
+                        if (player.rating) {
+                            answer = answer + "(" + player.rating + ")"
+                        }
+                    }
+                    answer = answer + "]"
+                }
+                res.send(answer)
+            } else {
+                res.send("Esse jogador não está a jogar nenhum jogo... :(")
+            }
+        })
     })
 })
 
