@@ -85,6 +85,63 @@ app.all('/match', (req, res) => {
                 }
                 for (let j = 0; j < teams[i].length; j++) {
                     const player = teams[i][j].player
+                    const player_civ_name = "(" + civ_mapping[player.civilization] + ")" + player.name 
+                    if (j == 0) {
+                        answer = answer + player_civ_name
+                    } else {
+                        answer = answer + " + " + player_civ_name
+                    }
+                    if (player.rating) {
+                        answer = answer + "(" + player.rating + ")"
+                    }
+                }
+                answer = answer + "]"
+            }
+            res.send(answer)
+        } else {
+            res.send("O teu streamer favorito não está a jogar nenhum jogo :(")
+        }
+    })
+})
+
+app.all('/match/:name', (req, res) => {
+    const player_name = req.params.name
+    
+    // get user id
+     request.get({
+        url: "https://aoe4world.com/api/v0/players/search?query=" + player_name ,
+        json: true
+     }, (error, response) => {
+        let body = response.body
+        if (error) {
+            return res.send("Não encontrei o nome desse jogador");
+        }
+
+        let answer = 'Player: ' + body.players[0].name + " <-> "
+        })
+
+    request.get({
+        url: "https://aoe4world.com/api/v0/players/" + String(mjerticla_id) + "/games",
+        json: true
+    }, (error, response) => {
+        let body = response.body
+        if (error) {
+            return res.send("Something went wrong! HEEEEELP");
+        }
+        let last_game = body.games[0]  // get last game
+        if (last_game.ongoing) {
+            let answer = "["
+            answer = answer + last_game.server + "]"
+            answer = answer + " <-> " + last_game.map
+            const teams = last_game.teams
+            for (let i = 0; i < teams.length; i++) {
+                if (i == 0) {
+                    answer = answer + " <-> ["
+                } else {
+                    answer = answer + " VS ["
+                }
+                for (let j = 0; j < teams[i].length; j++) {
+                    const player = teams[i][j].player
                     const player_civ_name = answer + "(" + civ_mapping[player.civilization] + ")" + player.name 
                     if (j == 0) {
                         answer = answer + player_civ_name
@@ -103,5 +160,6 @@ app.all('/match', (req, res) => {
         }
     })
 })
+
 
 app.listen(process.env.PORT || 3000)
