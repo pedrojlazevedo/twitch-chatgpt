@@ -61,14 +61,14 @@ app.all('/match', (req, res) => {
         let last_game = body.games[0]  // get last game
         if (last_game.ongoing) {
             let answer = "["
-            answer = answer + body.server + "]"
+            answer = answer + last_game.server + "]"
             console.log(body.map)
             answer = answer + " <-> " + body.map
             const teams = last_game.teams
             for (let i = 0; i < teams.length; i++) {
                 answer = answer + " <-> ["
                 for (let j = 0; j < teams[i].length; j++) {
-                    const player = teams[i][j]
+                    const player = teams[i][j].player
                     answer = answer + " " + player.name + "(" + player.rating + ")"
                     console.log(player)
                     console.log(player.name)
