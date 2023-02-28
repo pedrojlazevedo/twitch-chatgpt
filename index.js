@@ -51,7 +51,7 @@ app.get('/rank/:name', (req, res) => {
 
 app.all('/match', (req, res) => {
     request.get({
-        url: "https://aoe4world.com/api/v0/players/" + mjerticla_id + "/games",
+        url: "https://aoe4world.com/api/v0/players/" + String(mjerticla_id) + "/games",
         json: true
     }, (error, response) => {
         let body = response.body
