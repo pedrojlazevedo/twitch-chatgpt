@@ -116,9 +116,10 @@ app.get('/match/:name', (req, res) => {
         if (error) {
             return res.send("Não encontrei o nome desse jogador");
         }
+        console.log(body.players[0])
         player_id = body.players[0].profile_id
     })
-    
+    console.log(player_id)
     if (player_id === 0) {
         res.send("Não encontrei o nome desse jogador.")
     }
