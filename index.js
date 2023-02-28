@@ -4,6 +4,19 @@ const app = express()
 
 const mjerticla_id = 6600634
 
+const civ_mapping = {
+    'holy_roman_empire': 'HRE',
+    'rus': 'RUS',
+    'mongols': 'Mongol',
+    'chinese': 'China',
+    'delhi_sultanate': 'Delhi',
+    'english': 'ENG',
+    'ottomans': 'Otto',
+    'abbasid_dynasty': 'Abba',
+    'french': 'FR',
+    'malians': 'Malian'
+}
+
 app.all('/', (req, res) => {
     console.log("Just got a request!")
     res.send('Yo!')
@@ -72,10 +85,11 @@ app.all('/match', (req, res) => {
                 }
                 for (let j = 0; j < teams[i].length; j++) {
                     const player = teams[i][j].player
+                    const player_civ_name = answer + "(" + civ_mapping[player.civilization] + ")" + player.name 
                     if (j == 0) {
-                        answer = answer + player.name 
+                        answer = answer + player_civ_name
                     } else {
-                        answer = answer + " " + player.name 
+                        answer = answer + " + " + player_civ_name
                     }
                     if (player.rating) {
                         answer = answer + "(" + player.rating + ")"
