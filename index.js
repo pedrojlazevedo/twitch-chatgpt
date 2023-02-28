@@ -66,8 +66,8 @@ app.all('/match', (req, res) => {
             teams = last_game.teams
             for (let i = 0; i < teams.length; i++) {
                 answer = answer + " <-> ["
-                for (let j = 0; j < team[i].length; j++) {
-                    let player = team[i][j]
+                for (let j = 0; j < teams[i].length; j++) {
+                    let player = teams[i][j]
                     answer = answer + " " + player.name + "(" + player.rating + ")"
                 }
                 answer = answer + "]"
