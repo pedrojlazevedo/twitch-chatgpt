@@ -143,15 +143,15 @@ app.get('/match/:name', (req, res) => {
                 answer = answer + " <-> " + last_game.map
                 const teams = last_game.teams
                 for (let i = 0; i < teams.length; i++) {
-                    if (i == 0) {
+                    if (i === 0) {
                         answer = answer + " <-> ["
                     } else {
                         answer = answer + " VS ["
                     }
                     for (let j = 0; j < teams[i].length; j++) {
                         const player = teams[i][j].player
-                        const player_civ_name = answer + "(" + civ_mapping[player.civilization] + ")" + player.name
-                        if (j == 0) {
+                        const player_civ_name = "(" + civ_mapping[player.civilization] + ")" + player.name
+                        if (j === 0) {
                             answer = answer + player_civ_name
                         } else {
                             answer = answer + " + " + player_civ_name
