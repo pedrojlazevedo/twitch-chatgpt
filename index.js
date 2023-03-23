@@ -171,7 +171,7 @@ app.get('/match/:name', (req, res) => {
 })
 
 
-app.post('/gpt', (req, res) => {
+async app.post('/gpt', (req, res) => {
     console.log(req.body)
     const text = req.body.text
     const { Configuration, OpenAIApi } = require("openai");
