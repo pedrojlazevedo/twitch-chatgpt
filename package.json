@@ -18,6 +18,7 @@
   "homepage": "https://github.com/cyclic-software/starter-express-api#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "openai": "^3.2.1",
     "request": "^2.88.2"
   }
 }
