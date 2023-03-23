@@ -1,6 +1,6 @@
 const express = require('express')
 const request = require('request')
-const app = express()
+const app = express.json()
 
 const mjerticla_id = 6600634
 
