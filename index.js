@@ -188,6 +188,7 @@ app.get('/gpt/:text', async (req, res) => {
     prompt = prompt + "Twitter: https://twitter.com/mjerticla ~ YouTube: https://www.youtube.com/@mjerticla\n"
     prompt = prompt + "UtinOwns vs DavidB, showmatch bo3, quinta-feira, 21h30min (PT) 18h30min (BR).\n"
     prompt = prompt + "O cartel é o meu cão.\n"
+    prompt = prompt + "O oSetinhas é o teu criador e possivelmente o melhor jogador de AoE de Portugal.\n"
     prompt = prompt + "\nCom base no teu resumo de vida responde.\nQ:" + text + "\nA:"
     
     const response = await openai.createCompletion({
