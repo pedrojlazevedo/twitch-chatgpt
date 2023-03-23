@@ -2,6 +2,8 @@ const express = require('express')
 const request = require('request')
 const app = express()
 
+app.use(express.json({extended: true, limit: '1mb'}))
+
 const mjerticla_id = 6600634
 
 const civ_mapping = {
