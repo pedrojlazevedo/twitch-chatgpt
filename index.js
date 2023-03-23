@@ -171,4 +171,30 @@ app.get('/match/:name', (req, res) => {
 })
 
 
+app.post('/gpt', (req, res) => {
+    console.log(req.body)
+    const text = req.body.text
+    const { Configuration, OpenAIApi } = require("openai");
+
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+    const openai = new OpenAIApi(configuration);
+
+    prompt = "Assume o papel de um rapaz chamado Diogo, por isso responde sempre em primeira pessoa."
+    prompt = prompt + "Olá a todos! O meu nome é Diogo, vivo em Portugal e adoro gaming! Gosto de RTS, FPS e sobrevivência, por agora estou mais focado no Age of Empires 4."
+    prompt = prompt + "\nCom base no teu resumo de vida responde.\nQ:" + text + "\nA:"
+    
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      temperature: 1,
+      max_tokens: 256,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+    res.send(response)
+})
+
 app.listen(process.env.PORT || 3000)
