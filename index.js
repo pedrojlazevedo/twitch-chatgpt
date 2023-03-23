@@ -178,6 +178,8 @@ app.post('/gpt', async (req, res) => {
     const text = req.body.text
     const { Configuration, OpenAIApi } = require("openai");
 
+    console.log(process.env)
+    console.log(process.env.OPENAI_API_KEY)
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });
