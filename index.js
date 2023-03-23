@@ -173,9 +173,8 @@ app.get('/match/:name', (req, res) => {
 })
 
 
-app.post('/gpt', async (req, res) => {
-    console.log(req.body)
-    const text = req.body.text
+app.get('/gpt/:text', async (req, res) => {
+    const text = req.params.text
     const { Configuration, OpenAIApi } = require("openai");
 
     console.log(process.env)
@@ -198,7 +197,11 @@ app.post('/gpt', async (req, res) => {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-    res.send(response)
+    if (response.data.choices) {
+        res.send(response.data.choices[0].text)
+    } else {
+        res.send("De momento deu bosta. Tenta mais tarde <3")
+    }
 })
 
 app.listen(process.env.PORT || 3000)
