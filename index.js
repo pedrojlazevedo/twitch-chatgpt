@@ -191,9 +191,15 @@ app.get('/gpt/:text', async (req, res) => {
     });
     const openai = new OpenAIApi(configuration);
 
-    prompt = open_file("./diogo.txt")
+    let prompt = ""
+    fs.readFile("./diogo.txt", 'utf8', function(err, data) {
+      if (err) throw err;
+      console.log('OK: ' + "filename");
+      console.log(data);
+      prompt = data;
+    });
     prompt = prompt + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:"
-    
+
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
