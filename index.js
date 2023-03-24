@@ -14,7 +14,7 @@ app.all('/', (req, res) => {
 })
 
 let file_context = ""
-fs.readFile("./context.txt", 'utf8', function(err, data) {
+fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   if (err) throw err;
   console.log(file_context);
   file_context = data;
