@@ -192,6 +192,7 @@ app.get('/gpt/:text', async (req, res) => {
     const openai = new OpenAIApi(configuration);
 
     prompt = open_file("./diogo.txt")
+    console.log(prompt)
     prompt = prompt + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:"
     
     const response = await openai.createCompletion({
