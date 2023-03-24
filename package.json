@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "openai": "^3.2.1",
+    "promisify": "^0.0.3",
     "request": "^2.88.2"
   }
 }
