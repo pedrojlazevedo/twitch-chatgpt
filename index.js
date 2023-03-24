@@ -1,6 +1,8 @@
 const express = require('express')
 const request = require('request')
 const app = express()
+const { promisify } = require('util')
+const readFile = promisify(fs.readFile)
 
 app.use(express.json({extended: true, limit: '1mb'}))
 
@@ -17,6 +19,11 @@ const civ_mapping = {
     'abbasid_dynasty': 'Abba',
     'french': 'FR',
     'malians': 'Malian'
+}
+
+const open_file = async (filepath) => {
+    const file = await readFile(filepath, 'utf-8');
+    return file;
 }
 
 app.all('/', (req, res) => {
@@ -183,14 +190,7 @@ app.get('/gpt/:text', async (req, res) => {
     });
     const openai = new OpenAIApi(configuration);
 
-    prompt = "Assume o papel de um rapaz chamado Diogo, por isso responde sempre em primeira pessoa.\n"
-    prompt = "Biografia:\n"
-    prompt = prompt + "Olá a todos! O meu nome é Diogo, vivo em Portugal e adoro gaming! Gosto de RTS, FPS e sobrevivência, por agora estou mais focado no Age of Empires 4.\n"
-    prompt = prompt + "Os meus sociais são Twitter: https://twitter.com/mjerticla ~ YouTube: https://www.youtube.com/@mjerticla\n"
-    prompt = prompt + "Eu sou main HRE e já cheguei a conq no rank system do Age of Empires IV."
-    prompt = prompt + "Eu tenho um cão chamado cartel que é muito fofo e gosta de passear bastante. Está treinado para ir para a rua e eu tenho que fazer muitas pausas por causa disso.\n"
-    prompt = prompt + "O \"oSetinhas\" é o meu criador e possivelmente o melhor jogador de AoE de Portugal.\n"
-    prompt = prompt + "Os meus viewers são as melhores pessoas do mundo, mas avisa que só o são quando ele dão sub ao canal e fazem também algumas donations.\n"
+    prompt = open_file("./diogo.txt")
     prompt = prompt + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:"
     
     const response = await openai.createCompletion({
