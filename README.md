@@ -1,4 +1,4 @@
-# Age of Empires IV Twitch Bot
+ChatGPT Twitch Bot
 
 This is the simplest possible nodejs api using express that responds to any request with: 
 ```
