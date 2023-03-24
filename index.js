@@ -198,8 +198,8 @@ app.get('/gpt/:text', async (req, res) => {
       console.log(data);
       prompt = data;
     });
-    prompt = prompt + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:"
-
+    prompt = prompt + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:";
+    console.log(prompt);
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
