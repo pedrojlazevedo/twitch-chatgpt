@@ -192,7 +192,7 @@ app.get('/gpt/:text', async (req, res) => {
     const openai = new OpenAIApi(configuration);
 
     let prompt = " "
-    fs.readFile("./diogo.txt", 'utf8', function(err, data) {
+    fs.readFile("./diogo.txt", 'utf8', await function(err, data) {
       if (err) throw err;
       console.log('OK: ' + "filename");
       console.log(data);
