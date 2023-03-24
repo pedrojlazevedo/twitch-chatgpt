@@ -180,6 +180,13 @@ app.get('/match/:name', (req, res) => {
     })
 })
 
+let diogo_context = ""
+fs.readFile("./diogo.txt", 'utf8', await function(err, data) {
+  if (err) throw err;
+  console.log('OK: ' + "filename");
+  console.log(data);
+  diogo_context = data;
+});
 
 app.get('/gpt/:text', async (req, res) => {
     const text = req.params.text
@@ -191,15 +198,9 @@ app.get('/gpt/:text', async (req, res) => {
     });
     const openai = new OpenAIApi(configuration);
 
-    let prompt = " "
-    fs.readFile("./diogo.txt", 'utf8', await function(err, data) {
-      if (err) throw err;
-      console.log('OK: ' + "filename");
-      console.log(data);
-      prompt = data;
-    });
-    prompt = prompt + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:";
+    const prompt = diogo_context + "\nUm utilizador da twitch fez-te uma pergunta. Responde da melhor forma possível.\nQ:" + text + "\nA:";
     console.log(prompt);
+    
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
