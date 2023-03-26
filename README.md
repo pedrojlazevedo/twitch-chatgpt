@@ -5,7 +5,7 @@ This is the simplest possible nodejs api using express that responds to any requ
 Yo!
 ```
 
-https://good-gray-sea-lion-wig.cyclic.app/gpt/:text
+https://YOUR_URL.cyclic.app/gpt/:text
 
 
 ### Deploy it in 7 seconds: 
