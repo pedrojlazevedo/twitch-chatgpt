@@ -42,8 +42,8 @@ app.get('/gpt/:text', async (req, res) => {
     const prompt = file_context + "\n Hier ist der Verlauf der letzten Nachrichten von den Chatteilnehmern mit dir: \n"+ chat_history + "\n\nQ:" + text + "\nA:";
     console.log(prompt);
     
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
       prompt: prompt,
       temperature: 0.5,
       max_tokens: 128,
