@@ -39,9 +39,7 @@ app.get('/gpt/:text', async (req, res) => {
     //{role: "assistant", content: ""}
     
     messages.push({role: "user", content: text})
-    
-    
-    
+   
     // Chat History
     //chat_history.push(text + "\n")
     //if (chat_history.length > 10) {
