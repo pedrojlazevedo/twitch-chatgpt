@@ -42,7 +42,7 @@ app.get('/gpt/:text', async (req, res) => {
     const prompt = file_context + "\n Hier ist der Verlauf der letzten Nachrichten von den Chatteilnehmern mit dir: \n"+ chat_history + "\n\nQ:" + text + "\nA:";
     console.log(prompt);
     
-    const response = await openai.createCompletion({
+    const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       prompt: prompt,
       temperature: 0.5,
