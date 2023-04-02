@@ -20,7 +20,11 @@ fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   file_context = data;
 });
 
-let chat_history =[]
+const messages = [
+        {role: "system", content: file_context}
+];
+
+
 app.get('/gpt/:text', async (req, res) => {
     const text = req.params.text
     const { Configuration, OpenAIApi } = require("openai");
@@ -31,20 +35,27 @@ app.get('/gpt/:text', async (req, res) => {
     });
     const openai = new OpenAIApi(configuration);      
    
+    //{role: "user", content: ""}
+    //{role: "assistant", content: ""}
+    
+    messages.push({role: "user", content: text})
+    
+    
     
     // Chat History
-    chat_history.push(text + "\n")
-    if (chat_history.length > 10) {
-        chat_history.shift()
-    }
-    console.log(chat_history)
+    //chat_history.push(text + "\n")
+    //if (chat_history.length > 10) {
+    //    chat_history.shift()
+    //}
+    //console.log(chat_history)
+    //const prompt = file_context + "\n\nQ:" + text + "\nA:";
     
-    const prompt = file_context + "\n Hier ist der Verlauf der letzten Nachrichten von den Chatteilnehmern mit dir: \n"+ chat_history + "\n\nQ:" + text + "\nA:";
-    console.log(prompt);
     
-    const response = await openai.createCompletion({
+    console.log(messages);
+    
+    const response = await openai.createChatCompletion({
       model: "text-davinci-003",
-      prompt: prompt,
+      messages: messages,
       temperature: 0.5,
       max_tokens: 128,
       top_p: 1,
@@ -52,7 +63,9 @@ app.get('/gpt/:text', async (req, res) => {
       presence_penalty: 0,
     });
     if (response.data.choices) {
-        res.send(response.data.choices[0].text)
+        messages.push({role: "assistant", content: response.data.choices[0].content})
+        console.log(messages);
+        res.send(response.data.choices[0].content)
     } else {
         res.send("Something went wrong. Try again later!")
     }
