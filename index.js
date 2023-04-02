@@ -52,7 +52,7 @@ app.get('/gpt/:text', async (req, res) => {
     console.log(messages);
     
     const response = await openai.createChatCompletion({
-      model: "text-davinci-003",
+      model: "gpt-3.5-turbo",
       messages: messages,
       temperature: 0.5,
       max_tokens: 128,
