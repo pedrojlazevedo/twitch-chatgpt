@@ -36,8 +36,8 @@ if (process.env.GPT_MODE === "CHAT"){
   fs.readFile("./file_context.txt", 'utf8', function(err, data) {
     if (err) throw err;
     console.log("Reading context file and adding it in front of user prompts:")
-    console.log(file_context);
     file_context = data;
+    console.log(file_context);
   });
 
 }
