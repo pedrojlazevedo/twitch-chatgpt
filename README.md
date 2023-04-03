@@ -91,6 +91,8 @@ Replace "your-cyclic-url.app" with the url you copied in step 7
 
 Enjoy your command. 
 
+
+
 ### Nightbot
 Go to your commands page and add a new command.
 
