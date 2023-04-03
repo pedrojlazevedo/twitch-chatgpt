@@ -97,7 +97,7 @@ Now it is time to build your Chat-Command.
 
 
 ### Streamelements
-Go to your Streamelements Dashboard -> Chatbot -> Comamnds -> Custom Commands.
+Go to your Streamelements Dashboard -> Chatbot -> Commands -> Custom Commands.
 
 Create a new command.
 
