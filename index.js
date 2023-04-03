@@ -5,6 +5,8 @@ const fs = require('fs');
 const { promisify } = require('util')
 const readFile = promisify(fs.readFile)
 
+console.log(process.env.HISTORY_LENGTH)
+
 app.use(express.json({extended: true, limit: '1mb'}))
 
 app.all('/', (req, res) => {
