@@ -7,7 +7,6 @@ const readFile = promisify(fs.readFile)
 
 app.use(express.json({extended: true, limit: '1mb'}))
 
-
 app.all('/', (req, res) => {
     console.log("Just got a request!")
     res.send('Yo!')
@@ -15,48 +14,39 @@ app.all('/', (req, res) => {
 const messages = [
         {role: "system", content: ""}
 ];
-// const file_context = "Du bist ein hilfreicher und witziger Chatbot der Community des Twitch Kanals BrotundVideospiele."
+
 let file_context = ""
 fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   if (err) throw err;
-  console.log(data);
-  console.log("file_context wurde gelesen")
+  console.log("Reading context file and adding it as system level message for the agent.")
   messages[0].content = data;
-  });
-
-
-
-
+});
 
 app.get('/gpt/:text', async (req, res) => {
+    
+    //text should recieve Username:Message for the agent to identify conversations with different users in his history. 
     const text = req.params.text
+    
     const { Configuration, OpenAIApi } = require("openai");
-
-    console.log(process.env.OPENAI_API_KEY)
+    console.log("OpenAI API Key:" + process.env.OPENAI_API_KEY)
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
+      message_history_length: process.env.HISTORY_LENGTH,
     });
-    const openai = new OpenAIApi(configuration);      
-   
-    //{role: "user", content: ""}
-    //{role: "assistant", content: ""}
     
+    const openai = new OpenAIApi(configuration);      
+    
+    //Add user message to  messages
     messages.push({role: "user", content: text})
     
-    if(messages.length > 50) {
-        messages.splice(1,1)
+    //Check if message history is exceeded
+    if(messages.length > configuration.message_history_length * 2 + 1) {
+        console.log('Message amount in history exceeded. Removing oldest user and agent messages.')
+        messages.splice(1,2)
     }
-   
-    // Chat History
-    //chat_history.push(text + "\n")
-    //if (chat_history.length > 10) {
-    //    chat_history.shift()
-    //}
-    //console.log(chat_history)
-    //const prompt = file_context + "\n\nQ:" + text + "\nA:";
     
-    
-    console.log(messages);
+    console.log("Messages: " + JSON.stringify(messages))
+    console.log("User Input: " + text)
     
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -67,10 +57,10 @@ app.get('/gpt/:text', async (req, res) => {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
+    
     if (response.data.choices) {
-        console.log(response.data.choices)
+        console.log ("Agent answer: " + response.data.choices[0].message.content)
         messages.push({role: "assistant", content: response.data.choices[0].message.content})
-        console.log(messages);
         res.send(response.data.choices[0].message.content)
     } else {
         res.send("Something went wrong. Try again later!")
