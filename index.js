@@ -61,9 +61,9 @@ app.get('/gpt/:text', async (req, res) => {
       presence_penalty: 0,
     });
     if (response.data.choices) {
-        messages.push({role: "assistant", content: response.data.choices[0].content})
+        messages.push({role: "assistant", content: response.data.choices.message.content})
         console.log(messages);
-        res.send(response.data.choices[0].content)
+        res.send(response.data.choices.message.content)
     } else {
         res.send("Something went wrong. Try again later!")
     }
