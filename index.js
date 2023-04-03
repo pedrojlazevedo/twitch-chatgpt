@@ -12,18 +12,20 @@ app.all('/', (req, res) => {
     console.log("Just got a request!")
     res.send('Yo!')
 })
-
+const messages = [
+        {role: "system", content: ""}
+];
 // const file_context = "Du bist ein hilfreicher und witziger Chatbot der Community des Twitch Kanals BrotundVideospiele."
-const file_context = fs.readFile("./file_context.txt", 'utf8', function(err, data) {
+let file_context = ""
+fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   if (err) throw err;
   console.log(data);
   console.log("file_context wurde gelesen")
-  return data
+  messages[0].content = data;
   });
 
-const messages = [
-        {role: "system", content: file_context + "\n"}
-];
+
+
 
 
 app.get('/gpt/:text', async (req, res) => {
