@@ -45,7 +45,7 @@ app.get('/gpt/:text', async (req, res) => {
         messages.splice(1,2)
     }
     
-    console.log("Messages: " + JSON.stringify(messages))
+    console.dir("Messages: " + JSON.stringify(messages))
     console.log("User Input: " + text)
     
     const response = await openai.createChatCompletion({
