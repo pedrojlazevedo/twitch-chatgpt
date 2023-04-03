@@ -33,7 +33,6 @@ app.get('/gpt/:text', async (req, res) => {
     console.log("OpenAI API Key:" + process.env.OPENAI_API_KEY)
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
-      message_history_length: Number(process.env.HISTORY_LENGTH),
     });
     
     const openai = new OpenAIApi(configuration);      
@@ -42,8 +41,8 @@ app.get('/gpt/:text', async (req, res) => {
     messages.push({role: "user", content: text})
     
     //Check if message history is exceeded
-    console.log("Messages in History: " + messages.length + "/" + configuration.message_history_length)
-    if(messages.length > configuration.message_history_length * 2 + 1) {
+    console.log("Messages in History: " + messages.length + "/" + process.env.HISTORY_LENGTH)
+    if(messages.length > process.env.HISTORY_LENGTH * 2 + 1) {
         console.log('Message amount in history exceeded. Removing oldest user and agent messages.')
         messages.splice(1,2)
     }
