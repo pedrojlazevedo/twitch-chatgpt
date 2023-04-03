@@ -13,7 +13,7 @@ app.all('/', (req, res) => {
     res.send('Yo!')
 })
 
-let file_context = ""
+let file_context = "You are a helpful chatbot."
 fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   if (err) throw err;
   console.log(file_context);
