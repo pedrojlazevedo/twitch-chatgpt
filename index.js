@@ -31,7 +31,7 @@ app.get('/gpt/:text', async (req, res) => {
     console.log("OpenAI API Key:" + process.env.OPENAI_API_KEY)
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
-      message_history_length: process.env.HISTORY_LENGTH,
+      message_history_length: Number(process.env.HISTORY_LENGTH),
     });
     
     const openai = new OpenAIApi(configuration);      
