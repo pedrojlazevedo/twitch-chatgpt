@@ -26,7 +26,7 @@ fs.readFile("./file_context.txt", 'utf8', function(err, data) {
 
 app.get('/gpt/:text', async (req, res) => {
     
-    //text should recieve Username:Message for the agent to identify conversations with different users in his history. 
+    //The agent should recieve Username:Message in the text to identify conversations with different users in his history. 
     const text = req.params.text
     
     const { Configuration, OpenAIApi } = require("openai");
@@ -41,8 +41,8 @@ app.get('/gpt/:text', async (req, res) => {
     messages.push({role: "user", content: text})
     
     //Check if message history is exceeded
-    console.log("Conversations in History: " + (messages.length - 1)/ 2 + "/" + process.env.HISTORY_LENGTH)
-    if(messages.length > (process.env.HISTORY_LENGTH * 2) + 1) {
+    console.log("Conversations in History: " + (messages.length)/ 2 + "/" + process.env.HISTORY_LENGTH)
+    if(messages.length > (process.env.HISTORY_LENGTH * 2)) {
         console.log('Message amount in history exceeded. Removing oldest user and agent messages.')
         messages.splice(1,2)
     }
