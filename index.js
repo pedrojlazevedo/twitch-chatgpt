@@ -14,12 +14,12 @@ app.all('/', (req, res) => {
 })
 
 // const file_context = "Du bist ein hilfreicher und witziger Chatbot der Community des Twitch Kanals BrotundVideospiele."
-fs.readFile("./file_context.txt", 'utf8', function(err, data) {
+const file_context = fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   if (err) throw err;
   console.log(data);
   console.log("file_context wurde gelesen")
-  const file_context = data;
-});
+  return data
+  });
 
 const messages = [
         {role: "system", content: file_context + "\n"}
