@@ -42,6 +42,7 @@ app.get('/gpt/:text', async (req, res) => {
     
     //Check if message history is exceeded
     console.log("Messages in History: " + messages.length + "/" + process.env.HISTORY_LENGTH)
+    console.log(messages.length > process.env.HISTORY_LENGTH * 2 + 1)
     if(messages.length > process.env.HISTORY_LENGTH * 2 + 1) {
         console.log('Message amount in history exceeded. Removing oldest user and agent messages.')
         messages.splice(1,2)
