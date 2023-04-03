@@ -21,7 +21,7 @@ fs.readFile("./file_context.txt", 'utf8', function(err, data) {
 });
 
 const messages = [
-        {role: "system", content: file_context}
+        {role: "system", content: file_context + "\n"}
 ];
 
 
@@ -39,6 +39,10 @@ app.get('/gpt/:text', async (req, res) => {
     //{role: "assistant", content: ""}
     
     messages.push({role: "user", content: text})
+    
+    if(messages.length > 20) {
+        messages.shift()
+    }
    
     // Chat History
     //chat_history.push(text + "\n")
