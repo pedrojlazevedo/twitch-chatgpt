@@ -13,12 +13,12 @@ app.all('/', (req, res) => {
     res.send('Yo!')
 })
 
-const file_context = "Du bist ein hilfreicher und witziger Chatbot der Community des Twitch Kanals BrotundVideospiele."
+// const file_context = "Du bist ein hilfreicher und witziger Chatbot der Community des Twitch Kanals BrotundVideospiele."
 fs.readFile("./file_context.txt", 'utf8', function(err, data) {
   if (err) throw err;
   console.log(data);
   console.log("file_context wurde gelesen")
-  file_context = data;
+  const file_context = data;
 });
 
 const messages = [
@@ -42,7 +42,7 @@ app.get('/gpt/:text', async (req, res) => {
     messages.push({role: "user", content: text})
     
     if(messages.length > 20) {
-        messages.shift()
+        messages.splice(1,1)
     }
    
     // Chat History
