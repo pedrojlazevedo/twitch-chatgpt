@@ -43,7 +43,7 @@ app.get('/gpt/:text', async (req, res) => {
     
     messages.push({role: "user", content: text})
     
-    if(messages.length > 20) {
+    if(messages.length > 50) {
         messages.splice(1,1)
     }
    
