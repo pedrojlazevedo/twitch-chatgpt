@@ -115,7 +115,7 @@ Go to your commands page and add a new command.
 
 Enter the following in the message field:
 ```bash
-$(urlfetch https://your-cyclic-url.app/gpt/"$(user):$(query)")
+$(urlfetch https://your-cyclic-url.app/gpt/"$(user):$(querystring)")
 ```
 Replace "your-cyclic-url.app" with the url you copied in step 7
 
