@@ -6,7 +6,7 @@ It considers a context file for every message so you can give it background info
 
 You can choose if you want it to run in prompt mode (without context of previous messages) or in chat mode (with context of previous messages).
 
-# How to use
+# How to use 
 
 ## 1. Fork this on Github
 Login with your github account and fork this repository to get your own copy of it. 
