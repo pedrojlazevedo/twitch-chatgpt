@@ -1,4 +1,5 @@
 Your support means the world to me! :heart:
+
 ☕ [Buy me a coffee to support me](https://www.buymeacoffee.com/osetinhas) ☕
 
 # ChatGPT Twitch Bot
