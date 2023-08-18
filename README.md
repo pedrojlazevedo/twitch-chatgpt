@@ -1,3 +1,6 @@
+Your support means the world to me! :heart:
+☕ [Buy me a coffee to support me](https://www.buymeacoffee.com/osetinhas) ☕
+
 # ChatGPT Twitch Bot
 
 This is a simple Node.js Chat bot with ChatGPT Integration based on the simplest possible nodejs api using express that responds to any request with: Yo!
