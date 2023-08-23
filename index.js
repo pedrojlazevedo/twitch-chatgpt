@@ -114,7 +114,7 @@ app.get('/gpt/:text', async (req, res) => {
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
                 agent_response = agent_response.substring(0, MAX_LENGTH)
                 // save the other part of the message for the next response
-                last_user_message = agent_response.substring(MAX_LENGTH, agent_response.length)
+                last_user_message = agent_response
                 console.log ("Sliced Agent answer: " + agent_response)
             }
             res.send(agent_response)
@@ -160,8 +160,7 @@ app.get('/gpt/continue', async (req, res) => {
         let new_user_message = last_user_message
         if (last_user_message.length > MAX_LENGTH){
             console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-            let new_user_message = last_user_message.substring(0, MAX_LENGTH)
-            last_user_message = last_user_message.substring(MAX_LENGTH, last_user_message.length)
+            new_user_message = last_user_message.substring(0, MAX_LENGTH)
             console.log ("Sliced Agent answer: " + last_user_message)
         }
         res.send(new_user_message)
@@ -170,6 +169,5 @@ app.get('/gpt/continue', async (req, res) => {
         res.send("No message to continue. Please send a new message first.")
     }
 })
-
 
 app.listen(process.env.PORT || 3000)
