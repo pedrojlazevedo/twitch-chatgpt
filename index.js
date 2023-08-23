@@ -112,9 +112,9 @@ app.get('/gpt/:text', async (req, res) => {
             //Check for Twitch max. chat message length limit and slice if needed
             if(agent_response.length > MAX_LENGTH){
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                agent_response = agent_response.substring(0, MAX_LENGTH)
+                agent_response = agent_response.slice(0, MAX_LENGTH)
                 // save the other part of the message for the next response
-                last_user_message = agent_response.substring(MAX_LENGTH)
+                last_user_message = agent_response.slice(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
             }
             res.send(agent_response)
@@ -142,9 +142,9 @@ app.get('/gpt/:text', async (req, res) => {
             //Check for Twitch max. chat message length limit and slice if needed
             if(agent_response.length > MAX_LENGTH){
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                agent_response = agent_response.substring(0, MAX_LENGTH)
+                agent_response = agent_response.slice(0, MAX_LENGTH)
                 // save the other part of the message for the next response
-                last_user_message = agent_response.substring(MAX_LENGTH)
+                last_user_message = agent_response.slice(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
             }
             res.send(agent_response)
@@ -161,9 +161,9 @@ app.get('/gpt/continue', async (req, res) => {
         let new_user_message = last_user_message
         if (last_user_message.length > MAX_LENGTH){
             console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-            new_user_message = last_user_message.substring(0, MAX_LENGTH)
+            new_user_message = last_user_message.slice(0, MAX_LENGTH)
             // save the other part of the message for the next response
-            last_user_message = last_user_message.substring(MAX_LENGTH)
+            last_user_message = last_user_message.slice(MAX_LENGTH)
             console.log ("Sliced Agent answer: " + last_user_message)
         }
         res.send(new_user_message)
