@@ -114,7 +114,7 @@ app.get('/gpt/:text', async (req, res) => {
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
                 agent_response = agent_response.substring(0, MAX_LENGTH)
                 // save the other part of the message for the next response
-                last_user_message = agent_response
+                last_user_message = agent_response.substring(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
             }
             res.send(agent_response)
@@ -140,12 +140,13 @@ app.get('/gpt/:text', async (req, res) => {
             let agent_response = response.data.choices[0].text
             console.log ("Agent answer: " + agent_response)
             //Check for Twitch max. chat message length limit and slice if needed
-            if(agent_response.length > 399){
+            if(agent_response.length > MAX_LENGTH){
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                agent_response = agent_response.substring(0, 399)
+                agent_response = agent_response.substring(0, MAX_LENGTH)
+                // save the other part of the message for the next response
+                last_user_message = agent_response.substring(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
             }
-
             res.send(agent_response)
         } else {
             res.send("Something went wrong. Try again later!")
@@ -161,6 +162,8 @@ app.get('/gpt/continue', async (req, res) => {
         if (last_user_message.length > MAX_LENGTH){
             console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
             new_user_message = last_user_message.substring(0, MAX_LENGTH)
+            // save the other part of the message for the next response
+            last_user_message = last_user_message.substring(MAX_LENGTH)
             console.log ("Sliced Agent answer: " + last_user_message)
         }
         res.send(new_user_message)
