@@ -155,9 +155,8 @@ app.get('/gpt/:text', async (req, res) => {
 
 })
 
-app.all('/continue/', (req, res) => {
+app.all('/gpt/continue/', (req, res) => {
     console.log("Just got a continue request!")
-    
     // Return the rest of the sliced answer from the last request
     if (last_user_message.length > 0) {
         let new_user_message = last_user_message
