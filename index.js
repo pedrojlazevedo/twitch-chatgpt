@@ -27,7 +27,7 @@ if (!MODEL_NAME) {
 // init global variables
 const MAX_LENGTH = 399
 let file_context = "You are a helpful Twitch Chatbot."
-const last_user_message = [""]
+let last_user_message = ""
 
 const messages = [
     {role: "system", content: "You are a helpful Twitch Chatbot."}
@@ -110,14 +110,15 @@ app.get('/gpt/:text', async (req, res) => {
             messages.push({role: "assistant", content: agent_response})
 
             //Check for Twitch max. chat message length limit and slice if needed
+            let sliced_agent_response = ""
             if(agent_response.length > MAX_LENGTH){
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                agent_response = agent_response.slice(0, MAX_LENGTH)
+                sliced_agent_response = agent_response.slice(0, MAX_LENGTH)
                 // save the other part of the message for the next response
-                last_user_message[0] = agent_response.slice(MAX_LENGTH)
+                last_user_message = agent_response.slice(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
             }
-            res.send(agent_response)
+            res.send(sliced_agent_response)
         } else {
             res.send("Something went wrong. Try again later!")
         }
@@ -139,15 +140,17 @@ app.get('/gpt/:text', async (req, res) => {
         if (response.data.choices) {
             let agent_response = response.data.choices[0].text
             console.log ("Agent answer: " + agent_response)
+
             //Check for Twitch max. chat message length limit and slice if needed
+            let sliced_agent_response = ""
             if(agent_response.length > MAX_LENGTH){
                 console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                agent_response = agent_response.slice(0, MAX_LENGTH)
+                sliced_agent_response = agent_response.slice(0, MAX_LENGTH)
                 // save the other part of the message for the next response
                 last_user_message[0] = agent_response.slice(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
             }
-            res.send(agent_response)
+            res.send(sliced_agent_response)
         } else {
             res.send("Something went wrong. Try again later!")
         }
