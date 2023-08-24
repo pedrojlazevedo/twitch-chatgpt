@@ -167,10 +167,10 @@ app.all('/continue/', (req, res) => {
         if (last_user_message.length > MAX_LENGTH){
             console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
             new_user_message = last_user_message.slice(0, MAX_LENGTH)
-            // save the other part of the message for the next response
-            last_user_message = last_user_message.slice(MAX_LENGTH)
-            console.log ("Sliced Agent answer: " + last_user_message)
         }
+        // save the other part of the message for the next response
+        last_user_message = last_user_message.slice(MAX_LENGTH)
+        console.log ("Sliced Agent answer: " + last_user_message)
         res.send(new_user_message)
     }
     else {
