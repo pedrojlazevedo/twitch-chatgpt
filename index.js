@@ -117,6 +117,8 @@ app.get('/gpt/:text', async (req, res) => {
                 // save the other part of the message for the next response
                 last_user_message = agent_response.slice(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
+            } else {
+                sliced_agent_response = agent_response
             }
             res.send(sliced_agent_response)
         } else {
@@ -149,6 +151,8 @@ app.get('/gpt/:text', async (req, res) => {
                 // save the other part of the message for the next response
                 last_user_message = agent_response.slice(MAX_LENGTH)
                 console.log ("Sliced Agent answer: " + agent_response)
+            } else {
+                sliced_agent_response = agent_response
             }
             res.send(sliced_agent_response)
         } else {
