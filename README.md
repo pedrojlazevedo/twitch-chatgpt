@@ -61,30 +61,29 @@ Go to the variables tab in your deployment.
 
 Create 3 new variables. The exact spelling of these variables is important:
 
-### GPT_MODE
- ```
-Accepts one of 2 values:
+1. _**GPT_MODE**_
+  - (default: CHAT)
+  - Accepts one of 2 values:
+    - "CHAT" - Chat mode with history, cheaper than prompt mode but also faster. Uses gpt-3.5-turbo as model.
+    - "PROMPT" - Prompt mode, no history. Uses text-davinci-003 as model.
 
-"CHAT" - Chat mode with history, cheaper then prompt mode but also faster. Uses gpt-3.5-turbo as model.
+2. _**HISTORY_LENGTH**_
+  - (default: 3)
+  - Accepts a number.
+  - Only works when GPT_MODE is CHAT
+  - Defines how many bot-user conversations will be saved and sent together with the most recent user message.
+  - This gives ChatGPT the ability to remember things and allow conversations instead of static prompts.
 
-"PROMPT" - Prompt mode, no history. Uses text-davinci-003 as model.
-```
+3. _**OPENAI_API_KEY**_
+  - This is where you paste your openAI Secure Key.
 
-### HISTORY_LENGTH 
-```
-Only works when GPT_MODE is CHAT
+4. _**MODEL_NAME**_
+  - (default: gpt-3.5-turbo)
+  - Accepts one of 2 values:
+    - "gpt-3.5-turbo" - The default model. This is the fastest and cheapest model. It is also the least accurate.
+    - "text-davinci-003" - Most expensive model.
+    - "gpt-4" - Most accurate model and if you have the plan for it!
 
-Accepts a number. 
-
-Defines how many bot-user conversations will be saved and sent together with the most recent user message. 
-
-This gives ChatGPT the ability to remember things and allow conversations instead of static prompts. 
-```
-
-### OPENAI_API_KEY
-```
-This is where you paste your openAI Secure Key. 
-```
 Save the Changes.
 
 ---
@@ -124,3 +123,11 @@ $(urlfetch https://your-cyclic-url.app/gpt/"$(user):$(querystring)")
 Replace "your-cyclic-url.app" with the url you copied in step 7
 
 Enjoy your command. 
+
+## Extra commands
+
+### !continue
+Twitch has a 400 character limit on chat messages. 
+If you want to continue a conversation, you can use the !continue command.
+
+$(urlfetch https://your-cyclic-url.app/continue")
