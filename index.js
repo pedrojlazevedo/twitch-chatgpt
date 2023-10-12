@@ -1,15 +1,18 @@
-const express = require('express')
-const request = require('request')
+import express from 'express';
+import fs from 'fs';
+import {OpenAIOperations} from './openai_operations.js';
+import {TwitchBot} from './twitch_bot.js';
+
 const app = express()
-const fs = require('fs');
-const { promisify } = require('util')
-const readFile = promisify(fs.readFile)
 
 // load env variables
 let GPT_MODE = process.env.GPT_MODE
 let HISTORY_LENGTH = process.env.HISTORY_LENGTH
 let OPENAI_API_KEY = process.env.OPENAI_API_KEY
 let MODEL_NAME = process.env.MODEL_NAME
+let TWITCH_USER = process.env.TWITCH_USER
+let TWITCH_AUTH =  process.env.TWITCH_AUTH
+let COMMAND_NAME = process.env.COMMAND_NAME
 
 if (!GPT_MODE) {
     GPT_MODE = "CHAT"
@@ -23,12 +26,83 @@ if (!OPENAI_API_KEY) {
 if (!MODEL_NAME) {
     MODEL_NAME = "gpt-3.5-turbo"
 }
+if (!TWITCH_USER) {
+    console.log("No TWITCH_USER found. Please set it as environment variable.")
+}
+if (!TWITCH_AUTH) {
+    // https://dev.twitch.tv/console
+    // https://twitchapps.com/tmi/
+    console.log("No TWITCH_AUTH found. Please set it as environment variable.")
+}
+if (!COMMAND_NAME) {
+    COMMAND_NAME = "gpt"
+}
 
 // init global variables
 const MAX_LENGTH = 399
 let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
+// setup twitch bot
+const channels = ["Darkwynn"];
+const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels);
+
+// setup openai operations
+file_context = fs.readFileSync("./file_context.txt", 'utf8');
+const openai_ops = new OpenAIOperations(file_context, OPENAI_API_KEY, MODEL_NAME, HISTORY_LENGTH);
+
+// setup twitch bot callbacks
+bot.onConnected((addr, port) => {
+    console.log(`* Connected to ${addr}:${port}`);
+
+    // join channels
+    channels.forEach(channel => {
+        bot.say(channel, `Hello, I am a helpful Twitch Chatbot. You can ask me anything by typing !${COMMAND_NAME} <your question> in the chat. I will try my best to answer!`);
+    });
+});
+
+bot.onMessage(async (channel, user, message, self) => {
+    if (self) return;
+
+    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
+    if (message.startsWith("!" + COMMAND_NAME)) {
+        // get text
+        const text = message.slice(COMMAND_NAME.length + 1);
+
+        // make openai call
+        const response = await openai_ops.make_openai_call(text);
+
+        // split response if it exceeds twitch chat message length limit
+        // send multiples messages with a delay in between
+        if (response.length > MAX_LENGTH) {
+            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    bot.say(channel, message);
+                }, 1000 * index);
+            });
+        } else {
+            bot.say(channel, response);
+        }
+    }
+});
+
+bot.onDisconnected((reason) => {
+    console.log(`Disconnected: ${reason}`);
+});
+
+// connect bot
+bot.connect(
+    () => {
+        console.log("Bot connected!");
+    },
+    (error) => {
+        console.log("Bot couldn't connect!");
+        console.log(error);
+    }
+);
+
+// setup bot
 const messages = [
     {role: "system", content: "You are a helpful Twitch Chatbot."}
 ];
@@ -46,22 +120,18 @@ app.all('/', (req, res) => {
 })
 
 if (process.env.GPT_MODE === "CHAT"){
-
     fs.readFile("./file_context.txt", 'utf8', function(err, data) {
         if (err) throw err;
         console.log("Reading context file and adding it as system level message for the agent.")
         messages[0].content = data;
     });
-
 } else {
-
     fs.readFile("./file_context.txt", 'utf8', function(err, data) {
         if (err) throw err;
         console.log("Reading context file and adding it in front of user prompts:")
         file_context = data;
         console.log(file_context);
     });
-
 }
 
 app.get('/gpt/:text', async (req, res) => {
@@ -83,8 +153,8 @@ app.get('/gpt/:text', async (req, res) => {
         //Add user message to  messages
         messages.push({role: "user", content: text})
         //Check if message history is exceeded
-        console.log("Conversations in History: " + ((messages.length / 2) -1) + "/" + process.env.HISTORY_LENGTH)
-        if(messages.length > ((process.env.HISTORY_LENGTH * 2) + 1)) {
+        console.log("Conversations in History: " + ((messages.length / 2) -1) + "/" + HISTORY_LENGTH)
+        if(messages.length > ((HISTORY_LENGTH * 2) + 1)) {
             console.log('Message amount in history exceeded. Removing oldest user and agent messages.')
             messages.splice(1,2)
         }
