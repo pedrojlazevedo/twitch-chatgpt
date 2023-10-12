@@ -261,9 +261,10 @@ app.all('/continue/', (req, res) => {
     }
 })
 
-app.listen(process.env.PORT || 3000)
+// make app always listening to twitch chat and get new messages starting with !gpt on port 3000
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+})
+//app.listen(process.env.PORT || 3000)
 
-// make app always listening to twitch chat and get new messages starting with !gpt
-app.listen(3001, () => {
-    console.log(`Example app listening at http://localhost:3001`)
-}) //3001 is the port for the chatbot to listen to the requests from the twitch chatbot
+
