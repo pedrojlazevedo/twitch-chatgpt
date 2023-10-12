@@ -68,32 +68,6 @@ bot.onConnected((addr, port) => {
     });
 });
 
-bot.onMessage(async (channel, user, message, self) => {
-    if (self) return;
-
-    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
-    if (message.startsWith("!" + COMMAND_NAME)) {
-        // get text
-        const text = message.slice(COMMAND_NAME.length + 1);
-
-        // make openai call
-        const response = await openai_ops.make_openai_call(text);
-
-        // split response if it exceeds twitch chat message length limit
-        // send multiples messages with a delay in between
-        if (response.length > MAX_LENGTH) {
-            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
-            messages.forEach((message, index) => {
-                setTimeout(() => {
-                    bot.say(channel, message);
-                }, 1000 * index);
-            });
-        } else {
-            bot.say(channel, response);
-        }
-    }
-});
-
 bot.onDisconnected((reason) => {
     console.log(`Disconnected: ${reason}`);
 });
@@ -120,8 +94,6 @@ console.log("OpenAI API Key:" + OPENAI_API_KEY)
 console.log("Model Name:" + MODEL_NAME)
 
 app.use(express.json({extended: true, limit: '1mb'}))
-
-
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
@@ -264,6 +236,31 @@ app.all('/continue/', (req, res) => {
 // make app always listening to twitch chat and get new messages starting with !gpt on port 3000
 app.listen(3000, () => {
     console.log("Server running on port 3000");
+    bot.onMessage(async (channel, user, message, self) => {
+    if (self) return;
+
+    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
+    if (message.startsWith("!" + COMMAND_NAME)) {
+        // get text
+        const text = message.slice(COMMAND_NAME.length + 1);
+
+        // make openai call
+        const response = await openai_ops.make_openai_call(text);
+
+        // split response if it exceeds twitch chat message length limit
+        // send multiples messages with a delay in between
+        if (response.length > MAX_LENGTH) {
+            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    bot.say(channel, message);
+                }, 1000 * index);
+            });
+        } else {
+            bot.say(channel, response);
+        }
+    }
+});
 })
 //app.listen(process.env.PORT || 3000)
 
