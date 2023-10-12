@@ -13,6 +13,7 @@ let MODEL_NAME = process.env.MODEL_NAME
 let TWITCH_USER = process.env.TWITCH_USER
 let TWITCH_AUTH =  process.env.TWITCH_AUTH
 let COMMAND_NAME = process.env.COMMAND_NAME
+let CHANNELS = process.env.CHANNELS
 
 if (!GPT_MODE) {
     GPT_MODE = "CHAT"
@@ -37,6 +38,11 @@ if (!TWITCH_AUTH) {
 if (!COMMAND_NAME) {
     COMMAND_NAME = "gpt"
 }
+if (!CHANNELS) {
+    CHANNELS = ["oSetinhas"]
+} else {
+    CHANNELS = CHANNELS.split(",")
+}
 
 // init global variables
 const MAX_LENGTH = 399
@@ -44,7 +50,7 @@ let file_context = "You are a helpful Twitch Chatbot."
 let last_user_message = ""
 
 // setup twitch bot
-const channels = ["Darkwynn"];
+const channels = CHANNELS;
 const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels);
 
 // setup openai operations
