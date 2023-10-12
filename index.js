@@ -8,7 +8,7 @@ const app = express()
 // load env variables
 let GPT_MODE = process.env.GPT_MODE
 let HISTORY_LENGTH = process.env.HISTORY_LENGTH
-let OPENAI_API_KEY = "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" //process.env.OPENAI_API_KEY
+let OPENAI_API_KEY = "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" //process.env.OPENAI_API_KEY
 let MODEL_NAME = process.env.MODEL_NAME
 let TWITCH_USER = "oSetinhas-bot-dev" // process.env.TWITCH_USER
 let TWITCH_AUTH =  "oauth:im3b6huc6wpq524p8gx9o0gt3w400n"//process.env.TWITCH_AUTH
