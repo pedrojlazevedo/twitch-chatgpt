@@ -8,10 +8,10 @@ const app = express()
 // load env variables
 let GPT_MODE = process.env.GPT_MODE
 let HISTORY_LENGTH = process.env.HISTORY_LENGTH
-let OPENAI_API_KEY = process.env.OPENAI_API_KEY
+let OPENAI_API_KEY = "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" //process.env.OPENAI_API_KEY
 let MODEL_NAME = process.env.MODEL_NAME
-let TWITCH_USER = process.env.TWITCH_USER
-let TWITCH_AUTH =  process.env.TWITCH_AUTH
+let TWITCH_USER = "oSetinhas-bot-dev" // process.env.TWITCH_USER
+let TWITCH_AUTH =  "oauth:im3b6huc6wpq524p8gx9o0gt3w400n"//process.env.TWITCH_AUTH
 let COMMAND_NAME = process.env.COMMAND_NAME
 let CHANNELS = process.env.CHANNELS
 
@@ -41,6 +41,7 @@ if (!COMMAND_NAME) {
 if (!CHANNELS) {
     CHANNELS = ["oSetinhas"]
 } else {
+    // split channels by comma into array
     CHANNELS = CHANNELS.split(",")
 }
 
@@ -119,6 +120,8 @@ console.log("OpenAI API Key:" + OPENAI_API_KEY)
 console.log("Model Name:" + MODEL_NAME)
 
 app.use(express.json({extended: true, limit: '1mb'}))
+
+
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
@@ -259,3 +262,8 @@ app.all('/continue/', (req, res) => {
 })
 
 app.listen(process.env.PORT || 3000)
+
+// make app always listening to twitch chat and get new messages starting with !gpt
+app.listen(3001, () => {
+    console.log(`Example app listening at http://localhost:3001`)
+}) //3001 is the port for the chatbot to listen to the requests from the twitch chatbot
