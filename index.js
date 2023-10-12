@@ -8,15 +8,15 @@ const app = express()
 // load env variables
 let GPT_MODE = process.env.GPT_MODE
 let HISTORY_LENGTH = process.env.HISTORY_LENGTH
-let OPENAI_API_KEY = "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" //process.env.OPENAI_API_KEY
+let OPENAI_API_KEY = process.env.OPENAI_API_KEY
 let MODEL_NAME = process.env.MODEL_NAME
-let TWITCH_USER = "oSetinhas-bot-dev" // process.env.TWITCH_USER
-let TWITCH_AUTH =  "oauth:im3b6huc6wpq524p8gx9o0gt3w400n"//process.env.TWITCH_AUTH
+let TWITCH_USER = process.env.TWITCH_USER
+let TWITCH_AUTH =  process.env.TWITCH_AUTH
 let COMMAND_NAME = process.env.COMMAND_NAME
 let CHANNELS = process.env.CHANNELS
 
 if (!GPT_MODE) {
-    GPT_MODE = "CHAT"
+    GPT_MODE = "PROMPT"
 }
 if (!HISTORY_LENGTH) {
     HISTORY_LENGTH = 5
@@ -52,6 +52,7 @@ let last_user_message = ""
 
 // setup twitch bot
 const channels = CHANNELS;
+const channel = channels[0];
 const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels);
 
 // setup openai operations
@@ -82,6 +83,32 @@ bot.connect(
         console.log(error);
     }
 );
+
+bot.onMessage(async (channel, user, message, self) => {
+    if (self) return;
+
+    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
+    if (message.startsWith("!" + COMMAND_NAME)) {
+        // get text
+        const text = message.slice(COMMAND_NAME.length + 1);
+
+        // make openai call
+        const response = await openai_ops.make_openai_call(text);
+
+        // split response if it exceeds twitch chat message length limit
+        // send multiples messages with a delay in between
+        if (response.length > MAX_LENGTH) {
+            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    bot.say(channel, message);
+                }, 1000 * index);
+            });
+        } else {
+            bot.say(channel, response);
+        }
+    }
+});
 
 // setup bot
 const messages = [
@@ -117,151 +144,46 @@ if (process.env.GPT_MODE === "CHAT"){
 
 app.get('/gpt/:text', async (req, res) => {
 
-    //The agent should recieve Username:Message in the text to identify conversations with different users in his history. 
-
+    //The agent should receive Username:Message in the text to identify conversations with different users in his history.
     const text = req.params.text
-    const { Configuration, OpenAIApi } = require("openai");
 
-    const configuration = new Configuration({
-        apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    const openai = new OpenAIApi(configuration);
-
-    if (GPT_MODE === "CHAT"){
-        //CHAT MODE EXECUTION
-
-        //Add user message to  messages
-        messages.push({role: "user", content: text})
-        //Check if message history is exceeded
-        console.log("Conversations in History: " + ((messages.length / 2) -1) + "/" + HISTORY_LENGTH)
-        if(messages.length > ((HISTORY_LENGTH * 2) + 1)) {
-            console.log('Message amount in history exceeded. Removing oldest user and agent messages.')
-            messages.splice(1,2)
-        }
-
-        console.log("Messages: ")
-        console.dir(messages)
-        console.log("User Input: " + text)
-
-        const response = await openai.createChatCompletion({
-            model: MODEL_NAME,
-            messages: messages,
-            temperature: 0.7,
-            max_tokens: 256,
-            top_p: 0.95,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-        });
-
-        if (response.data.choices) {
-            let agent_response = response.data.choices[0].message.content
-
-            console.log ("Agent answer: " + agent_response)
-            messages.push({role: "assistant", content: agent_response})
-
-            //Check for Twitch max. chat message length limit and slice if needed
-            let sliced_agent_response = ""
-            if(agent_response.length > MAX_LENGTH){
-                console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                sliced_agent_response = agent_response.slice(0, MAX_LENGTH)
-                // save the other part of the message for the next response
-                last_user_message = agent_response.slice(MAX_LENGTH)
-                console.log ("Sliced Agent answer: " + agent_response)
-            } else {
-                sliced_agent_response = agent_response
-            }
-            res.send(sliced_agent_response)
-        } else {
-            res.send("Something went wrong. Try again later!")
-        }
-
-    } else {
-        //PROMPT MODE EXECUTION
-        const prompt = file_context + "\n\nQ:" + text + "\nA:";
-        console.log("User Input: " + text)
-
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: prompt,
-            temperature: 0.7,
-            max_tokens: 256,
-            top_p: 0.95,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-        });
-        if (response.data.choices) {
-            let agent_response = response.data.choices[0].text
-            console.log ("Agent answer: " + agent_response)
-
-            //Check for Twitch max. chat message length limit and slice if needed
-            let sliced_agent_response = ""
-            if(agent_response.length > MAX_LENGTH){
-                console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-                sliced_agent_response = agent_response.slice(0, MAX_LENGTH)
-                // save the other part of the message for the next response
-                last_user_message = agent_response.slice(MAX_LENGTH)
-                console.log ("Sliced Agent answer: " + agent_response)
-            } else {
-                sliced_agent_response = agent_response
-            }
-            res.send(sliced_agent_response)
-        } else {
-            res.send("Something went wrong. Try again later!")
-        }
-    }
-
-})
-
-app.all('/continue/', (req, res) => {
-    console.log(last_user_message)
-    console.log("Just got a continue request!")
-    // Return the rest of the sliced answer from the last request
-    if (last_user_message.length > 0) {
-        let new_user_message = last_user_message
-        if (last_user_message.length > MAX_LENGTH){
-            console.log("Agent answer exceeds twitch chat limit. Slicing to first 399 characters.")
-            new_user_message = last_user_message.slice(0, MAX_LENGTH)
-        }
-        // save the other part of the message for the next response
-        last_user_message = last_user_message.slice(MAX_LENGTH)
-        console.log ("Sliced Agent answer: " + last_user_message)
-        res.send(new_user_message)
-    }
-    else {
-        res.send("No message to continue. Please send a new message first.")
-    }
-})
-
-// make app always listening to twitch chat and get new messages starting with !gpt on port 3000
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
-    bot.onMessage(async (channel, user, message, self) => {
-    if (self) return;
-
-    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
-    if (message.startsWith("!" + COMMAND_NAME)) {
-        // get text
-        const text = message.slice(COMMAND_NAME.length + 1);
-
-        // make openai call
-        const response = await openai_ops.make_openai_call(text);
-
-        // split response if it exceeds twitch chat message length limit
-        // send multiples messages with a delay in between
-        if (response.length > MAX_LENGTH) {
-            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+    // define function to check history length and perform bot response
+    const answer_question = async (answer) => {
+        if (answer.length > MAX_LENGTH) {
+            const messages = answer.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
             messages.forEach((message, index) => {
                 setTimeout(() => {
                     bot.say(channel, message);
                 }, 1000 * index);
             });
         } else {
-            bot.say(channel, response);
+            bot.say(channel, answer);
         }
     }
-});
+
+    let answer = ""
+    if (GPT_MODE === "CHAT") {
+        //CHAT MODE EXECUTION
+        answer = await openai_ops.make_openai_call(text);
+    } else if(GPT_MODE === "PROMPT") {
+        //PROMPT MODE EXECUTION
+
+        // create prompt based on file_context and the user prompt
+        let prompt = file_context;
+        prompt += "\n\nUser: " + text + "\nAgent:"
+        answer = await openai_ops.make_openai_call_completion(prompt);
+    } else {
+        //ERROR MODE EXECUTION
+        console.log("ERROR: GPT_MODE is not set to CHAT or PROMPT. Please set it as environment variable.")
+    }
+
+    // send response
+    await answer_question(answer)
+
+    res.send(answer)
 })
-//app.listen(process.env.PORT || 3000)
 
-
+// make app always listening to twitch chat and get new messages starting with !gpt on port 3000
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
