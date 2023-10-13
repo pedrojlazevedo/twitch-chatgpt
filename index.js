@@ -28,11 +28,13 @@ if (!MODEL_NAME) {
     MODEL_NAME = "gpt-3.5-turbo"
 }
 if (!TWITCH_USER) {
+    TWITCH_USER = "oSetinhasBot"
     console.log("No TWITCH_USER found. Please set it as environment variable.")
 }
 if (!TWITCH_AUTH) {
     // https://dev.twitch.tv/console
     // https://twitchapps.com/tmi/
+    TWITCH_AUTH = "oauth:vgvx55j6qzz1lkt3cwggxki1lv53c2"
     console.log("No TWITCH_AUTH found. Please set it as environment variable.")
 }
 if (!COMMAND_NAME) {
@@ -180,7 +182,7 @@ app.get('/gpt/:text', async (req, res) => {
     // send response
     await answer_question(answer)
 
-    res.send(" ")
+    res.send(answer)
 })
 
 // make app always listening to twitch chat and get new messages starting with !gpt on port 3000
