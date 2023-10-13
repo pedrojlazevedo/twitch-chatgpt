@@ -180,7 +180,7 @@ app.get('/gpt/:text', async (req, res) => {
     // send response
     await answer_question(answer)
 
-    // res.send(answer)
+    res.send("")
 })
 
 // make app always listening to twitch chat and get new messages starting with !gpt on port 3000
