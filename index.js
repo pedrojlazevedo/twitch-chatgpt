@@ -55,6 +55,8 @@ let last_user_message = ""
 // setup twitch bot
 const channels = CHANNELS;
 const channel = channels[0];
+console.log("Channels: " + channel)
+
 const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels);
 
 // setup openai operations
