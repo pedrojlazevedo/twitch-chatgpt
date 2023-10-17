@@ -41,7 +41,7 @@ if (!COMMAND_NAME) {
     COMMAND_NAME = "gpt"
 }
 if (!CHANNELS) {
-    CHANNELS = ["oSetinhas","jones88"]
+    CHANNELS = ["oSetinhas", "jones88"]
 } else {
     // split channels by comma into array
     CHANNELS = CHANNELS.split(",")
@@ -70,7 +70,7 @@ bot.onConnected((addr, port) => {
     // join channels
     channels.forEach(channel => {
         console.log(`* Joining ${channel}`);
-        //bot.say(channel, `Hello, I am a helpful Twitch Chatbot. You can ask me anything by typing !${COMMAND_NAME} <your question> in the chat. I will try my best to answer!`);
+        bot.say(channel, `Hello, I am a helpful Twitch GPT Chatbot. You can ask me anything by typing !${COMMAND_NAME} <your question> in the chat. I will try my best to answer!`);
     });
 });
 
@@ -89,31 +89,31 @@ bot.connect(
     }
 );
 
-// bot.onMessage(async (channel, user, message, self) => {
-//     if (self) return;
-//
-//     // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
-//     if (message.startsWith("!" + COMMAND_NAME)) {
-//         // get text
-//         const text = message.slice(COMMAND_NAME.length + 1);
-//
-//         // make openai call
-//         const response = await openai_ops.make_openai_call(text);
-//
-//         // split response if it exceeds twitch chat message length limit
-//         // send multiples messages with a delay in between
-//         if (response.length > MAX_LENGTH) {
-//             const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
-//             messages.forEach((message, index) => {
-//                 setTimeout(() => {
-//                     bot.say(channel, message);
-//                 }, 1000 * index);
-//             });
-//         } else {
-//             bot.say(channel, response);
-//         }
-//     }
-// });
+bot.onMessage(async (channel, user, message, self) => {
+    if (self) return;
+
+    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
+    if (message.startsWith("!" + COMMAND_NAME)) {
+        // get text
+        const text = message.slice(COMMAND_NAME.length + 1);
+
+        // make openai call
+        const response = await openai_ops.make_openai_call(text);
+
+        // split response if it exceeds twitch chat message length limit
+        // send multiples messages with a delay in between
+        if (response.length > MAX_LENGTH) {
+            const messages = response.match(new RegExp(`.{1,${MAX_LENGTH}}`, "g"));
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    bot.say(channel, message);
+                }, 1000 * index);
+            });
+        } else {
+            bot.say(channel, response);
+        }
+    }
+});
 
 // setup bot
 const messages = [
