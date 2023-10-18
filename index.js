@@ -6,6 +6,7 @@ import {job} from './keep_alive.js';
 
 // start keep alive cron job
 job.start();
+console.log(process.env)
 
 // setup express app
 const app = express()
