@@ -2,7 +2,12 @@ import express from 'express';
 import fs from 'fs';
 import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
+import {job} from './keep_alive.js';
 
+// start keep alive cron job
+job.start();
+
+// setup express app
 const app = express()
 
 // load env variables
@@ -55,7 +60,7 @@ let last_user_message = ""
 // setup twitch bot
 const channels = CHANNELS;
 const channel = channels[0];
-console.log("Channels: " + channel)
+console.log("Channels: " + channels)
 
 const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels);
 
