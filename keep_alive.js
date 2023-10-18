@@ -1,7 +1,13 @@
 import cron from 'cron';
 import https from 'https';
 
-const render_url = "https://osetinhas-bot.herokuapp.com/render"
+// get env RENDER_EXTERNAL_URL
+const render_url = process.env.RENDER_EXTERNAL_URL
+
+if (!render_url) {
+    console.log("No RENDER_EXTERNAL_URL found. Please set it as environment variable.")
+}
+
 const job = new cron.CronJob('*/14 * * * *', function() {
     console.log('Making keep alive call');
 
