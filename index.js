@@ -22,7 +22,7 @@ let COMMAND_NAME = process.env.COMMAND_NAME
 let CHANNELS = process.env.CHANNELS
 
 if (!GPT_MODE) {
-    GPT_MODE = "PROMPT"
+    GPT_MODE = "CHAT"
 }
 if (!HISTORY_LENGTH) {
     HISTORY_LENGTH = 5
@@ -35,16 +35,16 @@ if (!MODEL_NAME) {
 }
 if (!TWITCH_USER) {
     TWITCH_USER = "oSetinhasBot"
-    console.log("No TWITCH_USER found. Please set it as environment variable.")
+    console.log("No TWITCH_USER found. Using oSetinhasBot as default.")
 }
 if (!TWITCH_AUTH) {
     // https://dev.twitch.tv/console
     // https://twitchapps.com/tmi/
     TWITCH_AUTH = "oauth:vgvx55j6qzz1lkt3cwggxki1lv53c2"
-    console.log("No TWITCH_AUTH found. Please set it as environment variable.")
+    console.log("No TWITCH_AUTH found. Using oSetinhasBot auth as default.")
 }
 if (!COMMAND_NAME) {
-    COMMAND_NAME = "gpt"
+    COMMAND_NAME = "chat"
 }
 if (!CHANNELS) {
     CHANNELS = ["oSetinhas", "jones88"]
@@ -76,8 +76,8 @@ bot.onConnected((addr, port) => {
     // join channels
     channels.forEach(channel => {
         console.log(`* Joining ${channel}`);
-        bot.say(channel, `Hello, I am a helpful Twitch GPT Chatbot. You can ask me anything by typing !${COMMAND_NAME} <your question> in the chat. I will try my best to answer!`);
-    });
+        console.log(`* Saying hello in ${channel}`)
+        });
 });
 
 bot.onDisconnected((reason) => {
