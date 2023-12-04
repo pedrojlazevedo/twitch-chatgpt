@@ -118,7 +118,9 @@ bot.onMessage(async (channel, user, message, self) => {
         } else {
             bot.say(channel, response);
             try {
-                talk( tags.username + ',dice: ' + coincidencias[5], coincidencias[2] ?? 'm', coincidencias[4] ?? 'default' );
+                console.log(user.username + ' - ' + user.userstate);
+                // if( user.userstate.subscribe ) return;
+                talk( user.username + ',dice: ' + coincidencias[5], coincidencias[2] ?? 'm', coincidencias[4] ?? 'default' );
             } catch (error) {
                 console.error(error);
             }
