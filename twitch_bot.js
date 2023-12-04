@@ -1,5 +1,6 @@
 // Import tmi.js module
 import tmi from 'tmi.js';
+import OpenAI from 'openai';
 
 export class TwitchBot {
     constructor(bot_username, oauth_token, channels) {
@@ -15,6 +16,7 @@ export class TwitchBot {
             },
             channels: this.channels
         });
+        this.openai = new OpenAI(process.env.OPENAI_API_KEY);
     }
 
     addChannel(channel) {
@@ -75,6 +77,34 @@ export class TwitchBot {
                 console.error(error);
             }
         })();
+    }
+
+    async sayTTS(channel, text, userstate) {
+        try {
+            // Extract user roles from the userstate object provided by tmi.js
+            const userRoles = userstate && userstate['user-type'] ? [userstate['user-type']] : [];
+
+            // Check if the user has the required role or permission
+            if (!userRoles.includes('moderator')) {
+                console.log('User does not have permission for TTS.');
+                return;
+            }
+
+            // Make a call to the OpenAI TTS model
+            const mp3 = await this.openai.audio.speech.create({
+                model: 'tts-1',
+                voice: 'alloy',
+                input: text,
+            });
+
+            // Convert the mp3 to a buffer
+            const buffer = Buffer.from(await mp3.arrayBuffer());
+
+            // Play the TTS audio in the Twitch channel
+            await this.client.play(channel, buffer);
+        } catch (error) {
+            console.error('Error in sayTTS:', error);
+        }
     }
 
     whisper(username, message) {

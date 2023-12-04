@@ -117,6 +117,7 @@ bot.onMessage(async (channel, user, message, self) => {
             });
         } else {
             bot.say(channel, response);
+            await bot.sayTTS(channel, response, user);
         }
     }
 });
