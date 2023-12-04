@@ -1,6 +1,7 @@
 // Import tmi.js module
 import tmi from 'tmi.js';
 import OpenAI from 'openai';
+import soundPlay from 'sound-play';
 
 export class TwitchBot {
     constructor(bot_username, oauth_token, channels) {
@@ -101,7 +102,7 @@ export class TwitchBot {
             const buffer = Buffer.from(await mp3.arrayBuffer());
 
             // Play the TTS audio in the Twitch channel
-            await this.client.play(channel, buffer);
+            soundPlay(buffer);
         } catch (error) {
             console.error('Error in sayTTS:', error);
         }
