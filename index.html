@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to speech</title>
+</head>
+<body>
+  <div>
+    <input type="checkbox" id="tts_enabled" />
+    <label for="tts_enabled">Habilitar TTS</label>
+  </div>
+  <div>
+    <input type="checkbox" id="tts_subs_only" />
+    <label for="tts_subs_only">Solo suscriptores</label>
+  </div>
+  <div>
+    <button id="cancel_speech">Matar tts actual</button>
+  </div>
+  <div>
+    <span>Voz masculina</span>
+    <select id="selected_voice_male"></select>
+  </div>
+  <div>
+    <span>Voz femenina</span>
+    <select id="selected_voice_female"></select>
+  </div>
+  <script src='voice.js'></script>
+  <script src='tmi.min.js'></script>
+  <script src='chat.js'></script>
+</body>
+</html>
