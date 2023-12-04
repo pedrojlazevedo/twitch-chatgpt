@@ -82,13 +82,13 @@ export class TwitchBot {
     async sayTTS(channel, text, userstate) {
         try {
             // Extract user roles from the userstate object provided by tmi.js
-            const userRoles = userstate && userstate['user-type'] ? [userstate['user-type']] : [];
+            // const userRoles = userstate && userstate['user-type'] ? [userstate['user-type']] : [];
 
             // Check if the user has the required role or permission
-            if (!userRoles.includes('moderator')) {
-                console.log('User does not have permission for TTS.');
-                return;
-            }
+            // if (!userRoles.includes('moderator')) {
+            //     console.log('User does not have permission for TTS.');
+            //     return;
+            // }
 
             // Make a call to the OpenAI TTS model
             const mp3 = await this.openai.audio.speech.create({
