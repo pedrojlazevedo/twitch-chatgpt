@@ -3,6 +3,7 @@ import fs from 'fs';
 import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
 import {job} from './keep_alive.js';
+import say from "say";
 
 // start keep alive cron job
 job.start();
@@ -117,7 +118,8 @@ bot.onMessage(async (channel, user, message, self) => {
             });
         } else {
             bot.say(channel, response);
-            await bot.sayTTS(channel, response, user);
+            say.speak(response);
+            //await bot.sayTTS(channel, response, user);
         }
     }
 });
