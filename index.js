@@ -140,7 +140,7 @@ app.use(express.json({extended: true, limit: '1mb'}))
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(process.env.RENDER_SRC_ROOT + '/index.html')
     //res.send('Yo!')
 })
 
