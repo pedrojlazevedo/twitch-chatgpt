@@ -101,3 +101,5 @@ function getVoices( ){
 
 getVoices( );
 speechSynthesis.onvoiceschanged = getVoices;
+
+export { talk };

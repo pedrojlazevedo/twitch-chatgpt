@@ -3,6 +3,7 @@ import fs from 'fs';
 import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
 import {job} from './keep_alive.js';
+import {talk} from './voice.js';
 
 // start keep alive cron job
 job.start();
