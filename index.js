@@ -140,7 +140,8 @@ app.use(express.json({extended: true, limit: '1mb'}))
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
-    res.send('Yo!')
+    res.sendFile('index.html');
+    //res.send('Yo!')
 })
 
 if (process.env.GPT_MODE === "CHAT"){
