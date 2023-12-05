@@ -16,7 +16,7 @@ let estados = {
   }
 }
 
-const cb_enabled = document.getElementById('tts_enabled');
+const cb_enabled = true // document.getElementById('tts_enabled');
 const select_voces_m = document.getElementById('selected_voice_male');
 const select_voces_f = document.getElementById('selected_voice_female');
 
@@ -62,8 +62,8 @@ function send_voice( chat_message, voz = 'm', animo = 'default' ){
   locucion.rate = estado.rate; //velocidad
   locucion.pitch = estado.pitch; //tono
   locucion.voice = voz == 'm' ?
-                    voces[ select_voces_m.value ]:
-                    voces[ select_voces_f.value ];
+      voces[ select_voces_m.value ]:
+      voces[ select_voces_f.value ];
 
   speechSynthesis.speak( locucion );
   locucion.onend = function( ){
@@ -74,28 +74,28 @@ function send_voice( chat_message, voz = 'm', animo = 'default' ){
 function getVoices( ){
   voces = speechSynthesis.getVoices( );
   let voces_guardadas = localStorage.getItem('tts_voces') ?
-                        JSON.parse( localStorage.getItem('tts_voces') ) :
-                        { "m": "", "f": "" };
+      JSON.parse( localStorage.getItem('tts_voces') ) :
+      { "m": "", "f": "" };
 
 
   voces.map( (v, index) => {
     //cargar el combo para elegir voz masculina
     const option = document.createElement('option');
-          option.value = index;
-          if( `${v.name} (${v.lang})` == voces_guardadas.m ){
-            option.selected = true;
-          }
-          option.innerHTML = `${v.name} (${v.lang})`;
-          select_voces_m.appendChild(option);
+    option.value = index;
+    if( `${v.name} (${v.lang})` == voces_guardadas.m ){
+      option.selected = true;
+    }
+    option.innerHTML = `${v.name} (${v.lang})`;
+    select_voces_m.appendChild(option);
 
     //cargar combo para elegir voz femenina
     const option2 = document.createElement('option');
-          option2.value = index;
-          if( `${v.name} (${v.lang})` == voces_guardadas.f ){
-            option2.selected = true;
-          }
-          option2.innerHTML = `${v.name} (${v.lang})`;
-          select_voces_f.appendChild(option2);
+    option2.value = index;
+    if( `${v.name} (${v.lang})` == voces_guardadas.f ){
+      option2.selected = true;
+    }
+    option2.innerHTML = `${v.name} (${v.lang})`;
+    select_voces_f.appendChild(option2);
   } );
 }
 

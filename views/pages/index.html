@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+
+  <audio controls>
+    <source id="audioSource" type="audio/mpeg">
+    Your browser does not support the audio tag.
+  </audio>
+
+  <footer>
+    <%- include('../partials/footer'); %>
+  </footer>
+
+  <script>
+    function checkForUpdates() {
+      // Create a WebSocket connection
+      const socket = new WebSocket('ws://' + window.location.host + '/check-for-updates');
+
+      // Handle messages from the server
+      socket.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
+        if (data.updated) {
+          // If the file is updated, reload the audio source
+          const audio = document.getElementById('audioSource');
+          if (audio) {
+            audio.src = data.newAudioUrl;
+            audio.play();
+          }
+        }
+      });
+
+      // Handle WebSocket errors
+      socket.addEventListener('error', (error) => {
+        console.error('WebSocket error:', error);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      checkForUpdates();
+    });
+  </script>
+
+</body>
+</html>

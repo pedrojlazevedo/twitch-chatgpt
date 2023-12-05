@@ -3,7 +3,7 @@ import fs from 'fs';
 import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
 import {job} from './keep_alive.js';
-import {talk} from './voice.js';
+import WebSocket from 'ws';
 
 // start keep alive cron job
 job.start();
@@ -11,6 +11,9 @@ console.log(process.env)
 
 // setup express app
 const app = express()
+
+// set the view engine to ejs
+app.set('view engine', 'ejs');
 
 // load env variables
 let GPT_MODE = process.env.GPT_MODE
@@ -78,7 +81,7 @@ bot.onConnected((addr, port) => {
     channels.forEach(channel => {
         console.log(`* Joining ${channel}`);
         console.log(`* Saying hello in ${channel}`)
-        });
+    });
 });
 
 bot.onDisconnected((reason) => {
@@ -120,13 +123,20 @@ bot.onMessage(async (channel, user, message, self) => {
             bot.say(channel, response);
             try {
                 console.log(user.username + ' - ' + user.userstate);
-                // if( user.userstate.subscribe ) return;
-                talk( user.username + ',dice: ' + coincidencias[5], coincidencias[2] ?? 'm', coincidencias[4] ?? 'default' );
+                const ttsAudioUrl = await bot.sayTTS(channel, response, user.userstate);
+                // Notify clients about the file change
+                notifyFileChange(ttsAudioUrl);
             } catch (error) {
                 console.error(error);
             }
         }
     }
+});
+
+app.ws('/check-for-updates', (ws, req) => {
+  ws.on('message', (message) => {
+    // Handle WebSocket messages (if needed)
+  });
 });
 
 // setup bot
@@ -143,7 +153,8 @@ app.use(express.json({extended: true, limit: '1mb'}))
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
-    res.sendFile(process.env.RENDER_SRC_ROOT + '/index.html')
+    res.render('pages/index');
+    //res.sendFile(process.env.RENDER_SRC_ROOT + '/index.html')
     //res.send('Yo!')
 })
 
@@ -204,6 +215,23 @@ app.get('/gpt/:text', async (req, res) => {
 })
 
 // make app always listening to twitch chat and get new messages starting with !gpt on port 3000
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+const server = app.listen(3000, () => {
+  console.log('Server running on port 3000');
 });
+
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+    ws.on('message', (message) => {
+        // Handle client messages (if needed)
+    });
+});
+
+// Notify clients when the file changes
+function notifyFileChange(newAudioUrl) {
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({ updated: true, newAudioUrl }));
+        }
+    });
+}

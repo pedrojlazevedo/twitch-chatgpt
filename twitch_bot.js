@@ -1,7 +1,7 @@
 // Import tmi.js module
 import tmi from 'tmi.js';
 import OpenAI from 'openai';
-import soundPlay from 'sound-play';
+import { promises as fsPromises } from 'fs';
 
 export class TwitchBot {
     constructor(bot_username, oauth_token, channels) {
@@ -82,15 +82,6 @@ export class TwitchBot {
 
     async sayTTS(channel, text, userstate) {
         try {
-            // Extract user roles from the userstate object provided by tmi.js
-            // const userRoles = userstate && userstate['user-type'] ? [userstate['user-type']] : [];
-
-            // Check if the user has the required role or permission
-            // if (!userRoles.includes('moderator')) {
-            //     console.log('User does not have permission for TTS.');
-            //     return;
-            // }
-
             // Make a call to the OpenAI TTS model
             const mp3 = await this.openai.audio.speech.create({
                 model: 'tts-1',
@@ -101,8 +92,12 @@ export class TwitchBot {
             // Convert the mp3 to a buffer
             const buffer = Buffer.from(await mp3.arrayBuffer());
 
-            // Play the TTS audio in the Twitch channel
-            soundPlay(buffer);
+            // Save the buffer as an MP3 file
+            const filePath = '/file.mp3';
+            await fsPromises.writeFile(filePath, buffer);
+
+            // Return the path of the saved audio file
+            return filePath;
         } catch (error) {
             console.error('Error in sayTTS:', error);
         }
