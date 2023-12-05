@@ -17,7 +17,7 @@ export class TwitchBot {
             },
             channels: this.channels
         });
-        this.openai = new OpenAI({apiKey: 'process.env.OPENAI_API_KEY'});
+        this.openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
     }
 
     addChannel(channel) {
