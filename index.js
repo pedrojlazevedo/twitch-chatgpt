@@ -3,14 +3,14 @@ import fs from 'fs';
 import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
 import {job} from './keep_alive.js';
-import WebSocket from 'ws';
+import expressWs from 'express-ws';
 
 // start keep alive cron job
 job.start();
 console.log(process.env)
 
 // setup express app
-const app = express()
+const app = expressWs(express()).app;
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -219,7 +219,7 @@ const server = app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
 
-const wss = new WebSocket.Server({ server });
+const wss = expressWs.getWss();
 
 wss.on('connection', (ws) => {
     ws.on('message', (message) => {
