@@ -4,6 +4,7 @@ import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
 import {job} from './keep_alive.js';
 import expressWs from 'express-ws';
+import ws from 'ws';
 
 // start keep alive cron job
 job.start();
@@ -151,6 +152,7 @@ console.log("OpenAI API Key:" + OPENAI_API_KEY)
 console.log("Model Name:" + MODEL_NAME)
 
 app.use(express.json({extended: true, limit: '1mb'}))
+app.use('/public', express.static('public'))
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
@@ -230,10 +232,10 @@ wss.on('connection', (ws) => {
 });
 
 // Notify clients when the file changes
-function notifyFileChange(newAudioUrl) {
+function notifyFileChange() {
     wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ updated: true, newAudioUrl }));
+        if (client.readyState === ws.OPEN) {
+            client.send(JSON.stringify({ updated: true }));
         }
     });
 }

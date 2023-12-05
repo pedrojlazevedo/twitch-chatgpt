@@ -28,11 +28,13 @@
         const data = JSON.parse(event.data);
         if (data.updated) {
           // If the file is updated, reload the audio source
-          const audio = document.getElementById('audioSource');
-          if (audio) {
-            audio.src = data.newAudioUrl;
-            audio.play();
-          }
+          const audioElement = document.querySelector('audio');
+          const audioSource = document.getElementById('audioSource');
+            if (audioElement && audioSource) {
+                audioSource.src = '/public/file.mp3?' + new Date().getTime();
+            }
+            audioElement.load();
+            audioElement.play();
         }
       });
 

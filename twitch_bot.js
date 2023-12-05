@@ -93,7 +93,7 @@ export class TwitchBot {
             const buffer = Buffer.from(await mp3.arrayBuffer());
 
             // Save the buffer as an MP3 file
-            const filePath = '/file.mp3';
+            const filePath = './public/file.mp3';
             await fsPromises.writeFile(filePath, buffer);
 
             // Return the path of the saved audio file
