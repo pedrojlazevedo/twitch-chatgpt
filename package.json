@@ -24,7 +24,7 @@
     "express-ws": "^5.0.2",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
-    "openai": "^4.12.1",
+    "openai": "^4.20.1",
     "promisify": "^0.0.3",
     "request": "^2.88.2",
     "say": "^0.16.0",
