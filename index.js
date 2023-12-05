@@ -11,7 +11,7 @@ console.log(process.env)
 
 // setup express app
 const app = express();
-expressWs(app);
+const { app: appWithWebSocket } = expressWs(app);
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -220,7 +220,7 @@ const server = app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
 
-const wss = expressWs.getWss();
+const wss = appWithWebSocket.getWss();
 
 wss.on('connection', (ws) => {
     ws.on('message', (message) => {
