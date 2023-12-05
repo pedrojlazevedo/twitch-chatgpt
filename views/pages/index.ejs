@@ -21,7 +21,7 @@
   <script>
     function checkForUpdates() {
       // Create a WebSocket connection
-      const socket = new WebSocket('ws://' + window.location.host + '/check-for-updates');
+      const socket = new WebSocket('wss://' + window.location.host + '/check-for-updates');
 
       // Handle messages from the server
       socket.addEventListener('message', (event) => {

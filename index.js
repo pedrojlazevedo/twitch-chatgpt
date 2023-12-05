@@ -20,7 +20,7 @@ app.set('view engine', 'ejs');
 // load env variables
 let GPT_MODE = process.env.GPT_MODE
 let HISTORY_LENGTH = process.env.HISTORY_LENGTH
-let OPENAI_API_KEY = "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" //process.env.OPENAI_API_KEY
+let OPENAI_API_KEY = process.env.OPENAI_API_KEY
 let MODEL_NAME = process.env.MODEL_NAME
 let TWITCH_USER = process.env.TWITCH_USER
 let TWITCH_AUTH =  process.env.TWITCH_AUTH
