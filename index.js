@@ -10,7 +10,8 @@ job.start();
 console.log(process.env)
 
 // setup express app
-const app = expressWs(express()).app;
+const app = express();
+expressWs(app);
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
