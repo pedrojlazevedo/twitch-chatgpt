@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Include head partial -->
   <%- include('../partials/head'); %>
 </head>
 
 <body>
   <header>
+    <!-- Include header partial -->
     <%- include('../partials/header'); %>
   </header>
 
+<a href="https://www.buymeacoffee.com/osetinhas">
+    <img src="https://img.buymeacoffee.com/button-api/?text=Help me with a coffee :)&emoji=&slug=osetinhas&button_colour=BD5FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" />
+</a>
+
+  <!-- Audio player with controls -->
   <audio controls>
     <source id="audioSource" type="audio/mpeg">
     Your browser does not support the audio tag.
   </audio>
 
   <footer>
+    <!-- Include footer partial -->
     <%- include('../partials/footer'); %>
   </footer>
 
   <script>
+    // Function to check for updates using WebSocket
     function checkForUpdates() {
       // Create a WebSocket connection
       const socket = new WebSocket('wss://' + window.location.host + '/check-for-updates');
@@ -26,15 +35,20 @@
       // Handle messages from the server
       socket.addEventListener('message', (event) => {
         const data = JSON.parse(event.data);
+
+        // Check if the file is updated
         if (data.updated) {
-          // If the file is updated, reload the audio source
+          // Reload the audio source with a new timestamp to avoid caching
           const audioElement = document.querySelector('audio');
           const audioSource = document.getElementById('audioSource');
-            if (audioElement && audioSource) {
-                audioSource.src = '/public/file.mp3?' + new Date().getTime();
-            }
-            audioElement.load();
-            audioElement.play();
+
+          if (audioElement && audioSource) {
+            audioSource.src = '/public/file.mp3?' + new Date().getTime();
+          }
+
+          // Load and play the updated audio
+          audioElement.load();
+          audioElement.play();
         }
       });
 
@@ -44,6 +58,7 @@
       });
     }
 
+    // Call checkForUpdates when the DOM is fully loaded
     document.addEventListener("DOMContentLoaded", function () {
       checkForUpdates();
     });
