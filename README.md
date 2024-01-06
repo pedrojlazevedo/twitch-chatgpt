@@ -4,7 +4,7 @@ Your support means the world to me! :heart:
 
 And join our discord community:
 
-[https://discord.gg/m8D7YvMV](https://discord.gg/pcxybrpDx6)
+[https://discord.gg/pcxybrpDx6](https://discord.gg/pcxybrpDx6)
 
 # ChatGPT Twitch Bot
 
