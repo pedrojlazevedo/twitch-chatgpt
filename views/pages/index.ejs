@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Include head partial -->
+    <%- include('../partials/head'); %>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        header,
+        footer {
+            /* Add any styles for header and footer */
+        }
+
+        .coffee-button {
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #audioPlayer {
+            width: 100%;
+            max-width: 400px; /* Adjust max-width as needed */
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <!-- Include header partial -->
+        <%- include('../partials/header'); %>
+    </header>
+
+    <a href="https://www.buymeacoffee.com/osetinhas" class="coffee-button">
+        <img src="https://img.buymeacoffee.com/button-api/?text=Help me with a coffee :)&emoji=&slug=osetinhas&button_colour=BD5FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a coffee button" />
+    </a>
+
+    <!-- Audio player with controls -->
+    <audio controls id="audioPlayer">
+        <source id="audioSource" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
+
+    <footer>
+        <!-- Include footer partial -->
+        <%- include('../partials/footer'); %>
+    </footer>
+
+    <script>
+        // Function to check for updates using WebSocket
+        function checkForUpdates() {
+            // Create a WebSocket connection
+            const socket = new WebSocket('wss://' + window.location.host + '/check-for-updates');
+
+            // Handle messages from the server
+            socket.addEventListener('message', (event) => {
+                const data = JSON.parse(event.data);
+
+                // Check if the file is updated
+                if (data.updated) {
+                    // Reload the audio source with a new timestamp to avoid caching
+                    const audioElement = document.getElementById('audioPlayer');
+                    const audioSource = document.getElementById('audioSource');
+
+                    if (audioElement && audioSource) {
+                        audioSource.src = '/public/file.mp3?' + new Date().getTime();
+                    }
+
+                    // Load and play the updated audio
+                    audioElement.load();
+                    audioElement.play();
+                }
+            });
+
+            // Handle WebSocket errors
+            socket.addEventListener('error', (error) => {
+                console.error('WebSocket error:', error);
+            });
+        }
+
+        // Call checkForUpdates when the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", checkForUpdates);
+    </script>
+
+</body>
+
+</html>

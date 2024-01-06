@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: twitch-chatgpt-bot
+    runtime: node
+    branch: main
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: OPENAI_API_KEY
+        value: <your-openai-api-key>
+      - key: CHANNELS
+        value: <your-twitch-channel>
+      - key: GPT_MODE
+        value: "CHAT"
+      - key: HISTORY_LENGTH
+        value: "3"
+      - key: MODEL_NAME
+        value: "gpt-3.5-turbo"
+      - key: COMMAND_NAME
+        value: "chat"
+      - key: TWITCH_USER  # https://dev.twitch.tv/console
+        value: "oSetinhasBot"
+      - key: TWITCH_AUTH  # https://twitchapps.com/tmi/
+        value: "oauth:vgvx55j6qzz1lkt3cwggxki1lv53c2"
