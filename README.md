@@ -140,6 +140,17 @@ This step can be complicated.
 
 Save the Changes.
 
+## 7. Text-To-Speech (TTS) Connection
+
+Your render url, for example:
+- https://your-twitch-bot.onrender.com/
+
+You will see the following web page, and it is directly connected to your twitch chat.
+
+You can add it to your stream as a widget :)
+
+![img.png](imgs/img.png)
+
 ---
 
 If you used RENDER, you can stop here :)
