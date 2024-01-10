@@ -26,6 +26,7 @@ let TWITCH_USER = process.env.TWITCH_USER
 let TWITCH_AUTH =  process.env.TWITCH_AUTH
 let COMMAND_NAME = process.env.COMMAND_NAME
 let CHANNELS = process.env.CHANNELS
+let SEND_USERNAME = process.env.SEND_USERNAME
 
 if (!GPT_MODE) {
     GPT_MODE = "CHAT"
@@ -57,6 +58,9 @@ if (!CHANNELS) {
 } else {
     // split channels by comma into array
     CHANNELS = CHANNELS.split(",")
+}
+if (!SEND_USERNAME) {
+    SEND_USERNAME = true
 }
 
 // init global variables
@@ -105,9 +109,14 @@ bot.onMessage(async (channel, user, message, self) => {
     if (self) return;
 
     // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
-    if (message.startsWith("!" + COMMAND_NAME)) {
+    if (message.startsWith(COMMAND_NAME)) {
         // get text
-        const text = message.slice(COMMAND_NAME.length + 1);
+        // text from user ...
+        let text = message.slice(COMMAND_NAME.length);
+
+        if (SEND_USERNAME) {
+            text = user.username + ": " + text
+        }
 
         // make openai call
         const response = await openai_ops.make_openai_call(text);
