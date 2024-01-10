@@ -115,7 +115,7 @@ bot.onMessage(async (channel, user, message, self) => {
         let text = message.slice(COMMAND_NAME.length);
 
         if (SEND_USERNAME) {
-            text = user.username + ": " + text
+            text = "Message from user " + user.username + ": " + text
         }
 
         // make openai call
