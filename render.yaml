@@ -23,3 +23,5 @@ services:
         value: "oSetinhasBot"
       - key: TWITCH_AUTH  # https://twitchapps.com/tmi/
         value: "oauth:vgvx55j6qzz1lkt3cwggxki1lv53c2"
+      - key: SEND_USERNAME
+        value: "true"
