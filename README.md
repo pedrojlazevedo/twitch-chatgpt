@@ -123,7 +123,8 @@ Create 3 new variables. The exact spelling of these variables is important:
 6.3. Optional Variables only for Render
 
 6. _**COMMAND_NAME**_
-  - (default: chat) (so the command is !chat)
+  - (default: chat)
+  - You can add an exclamation mark (!) before the command name to make look like a twitch command.
   - Accepts a string.
   - Defines the command that will be used to trigger the bot.
 
