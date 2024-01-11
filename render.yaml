@@ -22,6 +22,6 @@ services:
       - key: TWITCH_USER  # https://dev.twitch.tv/console
         value: "oSetinhasBot"
       - key: TWITCH_AUTH  # https://twitchapps.com/tmi/
-        value: "oauth:vgvx55j6qzz1lkt3cwggxki1lv53c2"
+        value: "oauth:9wh6ujbu2mro28zhbl8z6z921iuyxz"
       - key: SEND_USERNAME
         value: "true"

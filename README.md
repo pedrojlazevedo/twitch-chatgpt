@@ -141,6 +141,7 @@ This step can be complicated.
 8. _**TWITCH_AUTH**_
   - Go to https://twitchapps.com/tmi/ and click on Connect with Twitch
   - Copy the token from the page and paste it in the TWITCH_AUTH variable  
+  - ⚠️ THIS TOKEN MIGHT EXPIRE AFTER A FEW DAYS, SO YOU MIGHT HAVE TO REPEAT THIS STEP EVERY FEW DAYS ⚠️
 
 Save the Changes.
 
