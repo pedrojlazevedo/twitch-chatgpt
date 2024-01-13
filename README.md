@@ -144,6 +144,11 @@ This step can be complicated.
   - Copy the token from the page and paste it in the TWITCH_AUTH variable  
   - ⚠️ THIS TOKEN MIGHT EXPIRE AFTER A FEW DAYS, SO YOU MIGHT HAVE TO REPEAT THIS STEP EVERY FEW DAYS ⚠️
 
+9. _**ENABLE_TTS**_
+  - (default: false)
+  - Accepts a boolean.
+  - If set to true, the bot will use the text-to-speech feature.
+
 Save the Changes.
 
 ## 7. Text-To-Speech (TTS) Connection

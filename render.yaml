@@ -25,3 +25,5 @@ services:
         value: "oauth:9wh6ujbu2mro28zhbl8z6z921iuyxz"
       - key: SEND_USERNAME
         value: "true"
+      - key: ENABLE_TTS
+        value: "false"

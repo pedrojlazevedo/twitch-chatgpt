@@ -27,6 +27,7 @@ let TWITCH_AUTH =  process.env.TWITCH_AUTH
 let COMMAND_NAME = process.env.COMMAND_NAME
 let CHANNELS = process.env.CHANNELS
 let SEND_USERNAME = process.env.SEND_USERNAME
+let ENABLE_TTS = process.env.ENABLE_TTS
 
 if (!GPT_MODE) {
     GPT_MODE = "CHAT"
@@ -61,6 +62,9 @@ if (!CHANNELS) {
 }
 if (!SEND_USERNAME) {
     SEND_USERNAME = true
+}
+if (!ENABLE_TTS) {
+    ENABLE_TTS = false
 }
 
 // init global variables
@@ -132,6 +136,8 @@ bot.onMessage(async (channel, user, message, self) => {
             });
         } else {
             bot.say(channel, response);
+        }
+        if (ENABLE_TTS) {
             try {
                 console.log(user.username + ' - ' + user.userstate);
                 const ttsAudioUrl = await bot.sayTTS(channel, response, user.userstate);
