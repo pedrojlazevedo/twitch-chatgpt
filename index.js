@@ -1,10 +1,13 @@
 import express from 'express';
 import fs from 'fs';
+import ws from 'ws';
+
+import expressWs from 'express-ws';
+
+import {job} from './keep_alive.js';
+
 import {OpenAIOperations} from './openai_operations.js';
 import {TwitchBot} from './twitch_bot.js';
-import {job} from './keep_alive.js';
-import expressWs from 'express-ws';
-import ws from 'ws';
 
 // start keep alive cron job
 job.start();
@@ -18,16 +21,17 @@ const expressWsInstance = expressWs(app);
 app.set('view engine', 'ejs');
 
 // load env variables
-let GPT_MODE = process.env.GPT_MODE
-let HISTORY_LENGTH = process.env.HISTORY_LENGTH
-let OPENAI_API_KEY = process.env.OPENAI_API_KEY
-let MODEL_NAME = process.env.MODEL_NAME
-let TWITCH_USER = process.env.TWITCH_USER
-let TWITCH_AUTH =  process.env.TWITCH_AUTH
-let COMMAND_NAME = process.env.COMMAND_NAME
-let CHANNELS = process.env.CHANNELS
-let SEND_USERNAME = process.env.SEND_USERNAME
-let ENABLE_TTS = process.env.ENABLE_TTS
+let GPT_MODE = process.env.GPT_MODE // CHAT or PROMPT
+let HISTORY_LENGTH = process.env.HISTORY_LENGTH // number of messages to keep in history
+let OPENAI_API_KEY = process.env.OPENAI_API_KEY // openai api key
+let MODEL_NAME = process.env.MODEL_NAME // openai model name (e.g. gpt-3, gpt-3.5-turbo, gpt-4)
+let TWITCH_USER = process.env.TWITCH_USER // twitch bot username
+let TWITCH_AUTH =  process.env.TWITCH_AUTH // tmi auth token
+let COMMAND_NAME = process.env.COMMAND_NAME // comma separated list of commands to trigger bot (e.g. !gpt, !chat)
+let CHANNELS = process.env.CHANNELS // comma separated list of channels to join
+let SEND_USERNAME = process.env.SEND_USERNAME // send username in message to openai
+let ENABLE_TTS = process.env.ENABLE_TTS // enable text to speech
+let ENABLE_CHANNEL_POINTS = process.env.ENABLE_CHANNEL_POINTS; // enable channel points
 
 if (!GPT_MODE) {
     GPT_MODE = "CHAT"
@@ -52,8 +56,12 @@ if (!TWITCH_AUTH) {
     console.log("No TWITCH_AUTH found. Using oSetinhasBot auth as default.")
 }
 if (!COMMAND_NAME) {
-    COMMAND_NAME = "chat"
+    COMMAND_NAME = ["!gpt"]
+} else {
+    // split commands by comma into array
+    COMMAND_NAME = COMMAND_NAME.split(",")
 }
+COMMAND_NAME = COMMAND_NAME.map(function(x){ return x.toLowerCase() })
 if (!CHANNELS) {
     CHANNELS = ["oSetinhas", "jones88"]
 } else {
@@ -61,10 +69,13 @@ if (!CHANNELS) {
     CHANNELS = CHANNELS.split(",")
 }
 if (!SEND_USERNAME) {
-    SEND_USERNAME = true
+    SEND_USERNAME = "true"
 }
 if (!ENABLE_TTS) {
-    ENABLE_TTS = false
+    ENABLE_TTS = "false"
+}
+if (!ENABLE_CHANNEL_POINTS) {
+    ENABLE_CHANNEL_POINTS = "false";
 }
 
 // init global variables
@@ -77,7 +88,7 @@ const channels = CHANNELS;
 const channel = channels[0];
 console.log("Channels: " + channels)
 
-const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels);
+const bot = new TwitchBot(TWITCH_USER, TWITCH_AUTH, channels, OPENAI_API_KEY, ENABLE_TTS);
 
 // setup openai operations
 file_context = fs.readFileSync("./file_context.txt", 'utf8');
@@ -112,10 +123,16 @@ bot.connect(
 bot.onMessage(async (channel, user, message, self) => {
     if (self) return;
 
-    // check if message is a command started with !COMMAND_NAME (e.g. !gpt)
-    if (message.startsWith(COMMAND_NAME)) {
-        // get text
-        // text from user ...
+    if (ENABLE_CHANNEL_POINTS) {
+        console.log(`The message id is ${user["msg-id"]}`);
+        if (user["msg-id"] === "highlighted-message") {
+            console.log(`The message is ${message}`);
+            const response = await openai_ops.make_openai_call(message);
+            bot.say(channel, response);
+        }
+    }
+    // check if message is a command started with !COMMAND_NAME (e.g. !gpt) in lower-cased
+    if (message.toLowerCase().startsWith(COMMAND_NAME)) {
         let text = message.slice(COMMAND_NAME.length);
 
         if (SEND_USERNAME) {
@@ -137,7 +154,7 @@ bot.onMessage(async (channel, user, message, self) => {
         } else {
             bot.say(channel, response);
         }
-        if (ENABLE_TTS) {
+        if (ENABLE_TTS === "true") {
             try {
                 console.log(user.username + ' - ' + user.userstate);
                 const ttsAudioUrl = await bot.sayTTS(channel, response, user.userstate);
@@ -151,9 +168,9 @@ bot.onMessage(async (channel, user, message, self) => {
 });
 
 app.ws('/check-for-updates', (ws, req) => {
-  ws.on('message', (message) => {
-    // Handle WebSocket messages (if needed)
-  });
+    ws.on('message', (message) => {
+        // Handle WebSocket messages (if needed)
+    });
 });
 
 // setup bot
@@ -234,7 +251,7 @@ app.get('/gpt/:text', async (req, res) => {
 
 // make app always listening to twitch chat and get new messages starting with !gpt on port 3000
 const server = app.listen(3000, () => {
-  console.log('Server running on port 3000');
+    console.log('Server running on port 3000');
 });
 
 const wss = expressWsInstance.getWss();

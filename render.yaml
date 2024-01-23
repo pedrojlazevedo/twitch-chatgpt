@@ -27,3 +27,5 @@ services:
         value: "true"
       - key: ENABLE_TTS
         value: "false"
+      - key: ENABLE_CHANNEL_POINTS
+        value: "false"

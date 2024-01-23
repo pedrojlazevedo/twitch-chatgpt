@@ -1,4 +1,5 @@
-import cron from 'cron';
+import { CronJob } from 'cron';
+
 import https from 'https';
 
 // get env RENDER_EXTERNAL_URL
@@ -8,7 +9,7 @@ if (!render_url) {
     console.log("No RENDER_EXTERNAL_URL found. Please set it as environment variable.")
 }
 
-const job = new cron.CronJob('*/14 * * * *', function() {
+const job = new CronJob('*/14 * * * *', function() {
     console.log('Making keep alive call');
 
     https.get(render_url, (resp) => {

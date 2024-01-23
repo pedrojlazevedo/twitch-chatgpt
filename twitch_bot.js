@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import { promises as fsPromises } from 'fs';
 
 export class TwitchBot {
-    constructor(bot_username, oauth_token, channels) {
+    constructor(bot_username, oauth_token, channels, openai_api_key, enable_tts) {
         this.channels = channels;
         this.client = new tmi.client({
             connection: {
@@ -17,7 +17,8 @@ export class TwitchBot {
             },
             channels: this.channels
         });
-        this.openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
+        this.openai = new OpenAI({apiKey: openai_api_key});
+        this.enable_tts = enable_tts;
     }
 
     addChannel(channel) {
@@ -81,6 +82,10 @@ export class TwitchBot {
     }
 
     async sayTTS(channel, text, userstate) {
+        // Check if TTS is enabled
+        if (this.enable_tts !== 'true') {
+            return;
+        }
         try {
             // Make a call to the OpenAI TTS model
             const mp3 = await this.openai.audio.speech.create({
