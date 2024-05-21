@@ -20,7 +20,7 @@ services:
       - key: COMMAND_NAME
         value: "chat"
       - key: TWITCH_USER  # https://dev.twitch.tv/console
-        value: "oSetinhasBot"
+        value: "kayos__bot"
       - key: TWITCH_AUTH  # https://twitchapps.com/tmi/
         value: "oauth:9wh6ujbu2mro28zhbl8z6z921iuyxz"
       - key: SEND_USERNAME
