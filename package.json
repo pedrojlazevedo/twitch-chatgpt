@@ -9,9 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pedrojlazevedo/twitch-chatgpt.git"
+    "url": "https://github.com/KayoticAnimal/twitch-chatgpt"
   },
-  "author": "Pedro Azevedo",
+  "author": "KayoticAnimal",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/pedrojlazevedo/twitch-chatgpt/issues"
