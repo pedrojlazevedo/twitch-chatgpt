@@ -29,3 +29,5 @@ services:
         value: "false"
       - key: ENABLE_CHANNEL_POINTS
         value: "false"
+      - key: COOLDOWN_DURATION
+        value: "10"
