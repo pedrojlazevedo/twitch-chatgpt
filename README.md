@@ -68,11 +68,14 @@ Go to the variables/environment tab in your Render deployment and set the follow
 
 #### 6.2. Optional Variables
 
+##### 6.2.1. Nightbot/Streamelements Integration Variable
 - `GPT_MODE`: (default: `CHAT`) Mode of operation, can be `CHAT` or `PROMPT`.
-- `HISTORY_LENGTH`: (default: `5`) Number of previous messages to include in context (only for `CHAT` mode).
-- `MODEL_NAME`: (default: `gpt-3.5-turbo`) The OpenAI model to use.
-- `COMMAND_NAME`: (default: `!gpt`) The command that triggers the bot.
-- `CHANNELS`: List of Twitch channels the bot will join (comma-separated).
+
+##### 6.2.2. All Modes Variables
+- `HISTORY_LENGTH`: (default: `5`) Number of previous messages to include in context.
+- `MODEL_NAME`: (default: `gpt-3.5-turbo`) The OpenAI model to use. You can check the available models [here](https://platform.openai.com/docs/models/). 
+- `COMMAND_NAME`: (default: `!gpt`) The command that triggers the bot. You can set more than one command by separating them with a comma (e.g. `!gpt,!chatbot`).
+- `CHANNELS`: List of Twitch channels the bot will join (comma-separated). (e.g. `channel1,channel2`; do not include www.twitch.tv)
 - `SEND_USERNAME`: (default: `true`) Whether to include the username in the message sent to OpenAI.
 - `ENABLE_TTS`: (default: `false`) Whether to enable Text-to-Speech.
 - `ENABLE_CHANNEL_POINTS`: (default: `false`) Whether to enable channel points integration.
@@ -80,8 +83,10 @@ Go to the variables/environment tab in your Render deployment and set the follow
 
 #### 6.3. Twitch Integration Variables
 
-- `TWITCH_USER`: Your Twitch bot username.
 - `TWITCH_AUTH`: OAuth token for your Twitch bot.
+  - Go to https://twitchapps.com/tmi/ and click on Connect with Twitch
+  - Copy the token from the page and paste it in the TWITCH_AUTH variable  
+  - ⚠️ THIS TOKEN MIGHT EXPIRE AFTER A FEW DAYS, SO YOU MIGHT HAVE TO REPEAT THIS STEP EVERY FEW DAYS ⚠️
 
 ### 7. Text-To-Speech (TTS) Setup
 
@@ -105,10 +110,6 @@ To use the `!gpt` command:
 
 The bot will respond with an OpenAI-generated message.
 
-### Additional Commands
-
-- `!continue`: Continue a conversation if the response exceeds Twitch's character limit.
-
 ### Streamelements and Nightbot Integration
 
 #### Streamelements
@@ -124,11 +125,12 @@ $(urlfetch https://your-render-url.onrender.com/gpt/"${user}:${queryescape ${1:}
 Create a custom command with the response:
 
 ```twitch
-$(eval "$(urlfetch https://your-render-url.onrender.com/gpt/"$(user):$(querystring)")"; ' ')
+!addcom !gptcmd $(urlfetch https://twitch-chatgpt-bot.onrender.com/gpt/$(user):$(querystring))
 ```
 
 Replace `your-render-url.onrender.com` with your actual Render URL.
-
+Replace `gptcmd` with your desired command name.
+Remove `$(user):` if you don't want to include the username in the message sent to OpenAI.
 ---
 
 ## Support

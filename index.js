@@ -165,16 +165,21 @@ app.get('/gpt/:text', async (req, res) => {
     const text = req.params.text;
 
     let answer = '';
-    if (GPT_MODE === 'CHAT') {
-        answer = await openaiOps.make_openai_call(text);
-    } else if (GPT_MODE === 'PROMPT') {
-        const prompt = `${fileContext}\n\nUser: ${text}\nAgent:`;
-        answer = await openaiOps.make_openai_call_completion(prompt);
-    } else {
-        console.error('ERROR: GPT_MODE is not set to CHAT or PROMPT. Please set it as an environment variable.');
-    }
+    try {
+        if (GPT_MODE === 'CHAT') {
+            answer = await openaiOps.make_openai_call(text);
+        } else if (GPT_MODE === 'PROMPT') {
+            const prompt = `${fileContext}\n\nUser: ${text}\nAgent:`;
+            answer = await openaiOps.make_openai_call_completion(prompt);
+        } else {
+            throw new Error('GPT_MODE is not set to CHAT or PROMPT. Please set it as an environment variable.');
+        }
 
-    res.send(answer);
+        res.send(answer);
+    } catch (error) {
+        console.error('Error generating response:', error);
+        res.status(500).send('An error occurred while generating the response.');
+    }
 });
 
 const server = app.listen(3000, () => {
