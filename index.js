@@ -163,19 +163,6 @@ if (GPT_MODE === 'CHAT') {
 
 app.get('/gpt/:text', async (req, res) => {
     const text = req.params.text;
-    const channel = channels[0];
-    const answerQuestion = async answer => {
-        if (answer.length > maxLength) {
-            const messages = answer.match(new RegExp(`.{1,${maxLength}}`, 'g'));
-            messages.forEach((msg, index) => {
-                setTimeout(() => {
-                    bot.say(channel, msg);
-                }, 1000 * index);
-            });
-        } else {
-            bot.say(channel, answer);
-        }
-    };
 
     let answer = '';
     if (GPT_MODE === 'CHAT') {
@@ -187,7 +174,6 @@ app.get('/gpt/:text', async (req, res) => {
         console.error('ERROR: GPT_MODE is not set to CHAT or PROMPT. Please set it as an environment variable.');
     }
 
-    await answerQuestion(answer);
     res.send(answer);
 });
 
